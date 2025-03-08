@@ -1,0 +1,16 @@
+{
+  "menu": {
+    "home": "HOME",
+    "shipment": "SHIPMENT",
+    "booking": "BOOKING",
+    "billing": "BILLING",
+    "business": "BUSINESS",
+    "business-tasks": "TASK",
+    "business-files": "FILES",
+    "business-settings": "SETTINGS"
+  },
+  "info-bar": {
+    "lang": "中文",
+    "message": "Message"
+  }
+}

@@ -1,0 +1,44 @@
+stages:
+  - build-dist
+  - sync-code
+
+variables:
+  ENVIRONMENT: qa
+
+build-dist:
+  stage: build-dist
+  image: node:20
+  tags:
+    - physical-docker
+  script:
+    - npm config set registry https://registry.npmmirror.com
+    - npm install -g pnpm
+    - pnpm install --registry=https://registry.npmmirror.com
+    - pnpm build:${ENVIRONMENT}
+  artifacts:
+    paths:
+      - dist/${ENVIRONMENT}/
+  only:
+    - react
+
+sync-code:
+  stage: sync-code
+  image: eeacms/rsync
+  tags:
+    - physical-docker
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY_TEST_MUKE_DESIGN" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -p 22 47.102.42.213 >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+
+  script:
+    - ssh -p 22 www@47.102.42.213 "echo SSH connection success"
+    - echo "Deploy Shunxinda Client to 213 test server"
+    - rsync -avh -e 'ssh -p 22' dist/${ENVIRONMENT}/ www@47.102.42.213:/www/wwwroot/shunxinda-client.test.muke.design/
+  dependencies:
+    - build-dist
+  only:
+    - react

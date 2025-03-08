@@ -1,0 +1,158 @@
+@import "./styles/index.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+p,
+#root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+@layer components {
+    .tips {
+        @apply text-gray-400;
+    }
+
+    .flex-center {
+        @apply flex justify-center items-center;
+    }
+
+    .flex-between-center {
+        @apply flex justify-between items-center;
+    }
+
+    .text-primary {
+        color: #566AE5;
+    }
+
+    .bg-primary {
+        background-color: #566AE5;
+    }
+}
+
+:where(.css-dev-only-do-not-override-manml3).ant-tabs .ant-tabs-tab .ant-tabs-tab-btn {
+    font-weight: bolder;
+}
+
+:where(.css-dev-only-do-not-override-manml3).ant-divider-horizontal.ant-divider-with-text,
+:where(.css-dev-only-do-not-override-manml3).ant-divider-vertical {
+    border-block-start: #CED0D1;
+}
+
+.ant-spin-nested-loading, .ant-spin-nested-loading > div {
+    height: 100%;
+}
+
+/* 登录页 */
+.ant-pro-form-login-container {
+    padding-top: 5% !important;
+}
+
+.ant-pro-form-login-header {
+    height: inherit;
+    line-height: 1;
+    margin-bottom: 40px;
+}
+
+.ant-pro-form-login-logo {
+    width: auto;
+    height: inherit;
+    line-height: inherit;
+    margin-inline-end: 0;
+}
+
+.ant-pro-form-login-main {
+    width: 500px !important;
+    padding: 50px;
+    box-sizing: border-box;
+    border-radius: 16px;
+    background-color: #fff;
+    box-shadow: 0 4px 30px 0 #a3bbe0;
+    border: 1px solid #dcdcdc;
+
+    .ant-form-item-label label {
+        color: #69686d;
+    }
+
+    .ant-form-item-control-input-content span {
+        border-radius: 0;
+    }
+
+    .ant-btn-lg {
+        border-radius: 4px;
+        height: 48px;
+    }
+}
+
+/* 菜单 */
+.ant-menu-title-content {
+    font-size: 16px;
+    font-weight: 500;
+    white-space: break-spaces;
+    line-height: 1.5;
+    margin-left: 10px;
+}
+
+/* .ant-menu-item.ant-menu-item-selected .ant-menu-title-content {
+  font-weight: 700;
+} */
+
+/* 头部标题 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ced0d1;
+    padding: 17px 0;
+    margin-top: 10px;
+
+    .title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #171629;
+    }
+}
+
+/* 分页器 */
+.ant-pagination .ant-pagination-total-text {
+    flex: 1;
+}
+
+/* 搜索区域 */
+.ant-pro-query-filter-row {
+    position: relative;
+    margin-right: 150px !important;
+}
+
+.ant-pro-query-filter-row > .ant-col:last-child {
+    position: absolute;
+    right: -185px;
+}
+
+/* 按钮 */
+.ant-btn-color-default.ant-btn-variant-filled {
+    background-color: #e7e7e7;
+}
+
+/* 表单 */
+.ant-form-item .ant-picker {
+    width: 100%;
+}
+
+/* 描述列表 */
+.ant-descriptions-item-content {
+    font-weight: 500;
+}
+
+/* 表格 */
+.ant-table-wrapper .ant-table-thead > tr > th {
+    font-weight: 400 !important;
+}
+
+
+

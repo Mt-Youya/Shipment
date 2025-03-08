@@ -1,0 +1,16 @@
+{
+  "menu": {
+    "home": "首页",
+    "booking": "订舱列表",
+    "shipment": "运单列表",
+    "billing": "账单列表",
+    "business": "我的业务",
+    "business-tasks": "任务",
+    "business-files": "文件",
+    "business-settings": "设置"
+  },
+  "info-bar": {
+    "lang": "English",
+    "message": "消息"
+  }
+}

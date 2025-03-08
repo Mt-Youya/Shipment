@@ -1,0 +1,57 @@
+.container {
+    display: flex;
+    height: 100%; /* 使容器占据整个视口高度 */
+  }
+
+  .sidebar {
+    background-color: #fff;
+    border-right: 1px solid #ddd; /* 注意：右侧边栏应使用border-left */
+    overflow: auto; /* 如果内容超出，则显示滚动条 */
+    flex-direction: column; /* 使子元素垂直排列 */
+    display: flex;
+  }
+
+  .sidebar:nth-child(2) {
+    border-right: none; /* 右侧边栏没有右边框 */
+    border-left: 1px solid #ddd; /* 右侧边栏有左边框 */
+  }
+
+  .sidebarSection {
+    flex: 1; /* 使每个区域占据等量的空间（这里是50%，因为有两个子区域） */
+    border-bottom: 1px solid #ddd; /* 底部分隔线，除了最后一个子区域外 */
+    box-sizing: border-box; /* 确保内边距不会增加元素的总高度 */
+  }
+
+.title{
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+}
+.RT_content{
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-around; */
+  height: 80%;
+}
+.RT_item{
+  width: 100%;
+  height: auto;
+  background-color:#566AE50D ;
+  margin-top: 10px;
+  padding: 10px 16px;
+  .RT_itemone{
+    font-size: 14px;
+    font-weight: 500;
+  }
+   .RT_itemtwo{
+    font-size: 12px;
+    font-weight: 500;
+    background-color:#566AE533 ;
+    padding: 2px 10px;
+    color:#566AE5;
+    margin: 5px 0;
+    display: inline-block ;
+    border-radius: 5px;
+  }
+}

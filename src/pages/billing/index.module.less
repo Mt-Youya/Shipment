@@ -1,0 +1,39 @@
+.ProtableWrapper {
+  :global {
+    .ant-form {
+      padding: 0 0 1rem;
+
+      .ant-pro-query-filter-actions {
+        .ant-space-item {
+          & > div {
+            flex-direction: row-reverse;
+          }
+        }
+      }
+    }
+
+    .ant-pro-table-search-query-filter {
+      margin: 0;
+
+      .ant-form-item.ant-pro-query-filter-actions {
+        margin-left: -1rem !important;
+      }
+    }
+
+    .ant-pro-query-filter-row {
+      & > .ant-col:last-child {
+        right: -160px;
+      }
+    }
+
+    .ant-pro-card-body {
+      padding: 0;
+    }
+
+    .ant-pro-table-list-toolbar {
+      .ant-pro-table-list-toolbar-right {
+        flex-direction: row-reverse;
+      }
+    }
+  }
+}
