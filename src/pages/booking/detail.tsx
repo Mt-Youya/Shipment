@@ -6,7 +6,7 @@ import TableComponent from "./tableComponent";
 import UploadComponent from "../../components/UploadComponent";
 import Notice from "./Notice";
 import { bookingAddAPI, bookingListAPI, bookingUpdateAPI } from "../../service/shipmentAPI";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 interface DetailListItem {
   type: string;
@@ -17,8 +17,8 @@ interface DetailListItem {
 }
 
 const MyForm: React.FC = () => {
+  const navigate = useNavigate();
   const { detailList, drop } = useDetailList();
-
   const [open, setOpen] = React.useState(false);
   const [detail, setDetail] = React.useState<any>({});
   const [form] = Form.useForm();
@@ -32,15 +32,16 @@ const MyForm: React.FC = () => {
   const obj = location.state?.obj;
 
   useEffect(() => {
-    if (obj) {
+    if (obj && Object.keys(drop).length > 0) {
       getDetail(obj.id);
     }
-  }, []);
+  }, [drop, obj]);
+
   const getDetail = async (id: string) => {
     try {
       const res = await bookingListAPI(id);
-      res.goods_date = dayjs(res?.goods_date);
-      res.loading_date = dayjs(res?.loading_date);
+      res.goods_date = res?.goods_date ? dayjs(res?.goods_date) : "";
+      res.loading_date = res?.loading_date ? dayjs(res?.loading_date) : "";
       setDetail(res);
       if (res.box_list && res.box_list.length > 0) {
         const tempOriginData = res.box_list.map((item, index) => ({
@@ -53,7 +54,6 @@ const MyForm: React.FC = () => {
       if (res.is_vgm === 0) setisTrailer(true);
       if (res.is_wooden === 0) setisFumigated(true);
       if (res.is_bond === 0) setBondType(true);
-
       form.setFieldsValue(res);
     } catch (error) {
       message.error("获取详情失败");
@@ -77,16 +77,18 @@ const MyForm: React.FC = () => {
     const params = removeEmptyProperties({
       ...values,
       freight_cost: values.freight_cost.toString(),
-      goods_date: dayjs(values.goods_date).format("YYYY-MM-DD"),
+      goods_date: values.goods_date ? dayjs(values.goods_date).format("YYYY-MM-DD") : "",
       loading_date: values.loading_date ? dayjs(values.loading_date).format("YYYY-MM-DD") : "",
       box_list: tableData
     });
     if (obj) {
       await bookingUpdateAPI(params, obj.id);
       message.success("修改成功");
+      navigate("/booking");
     } else {
       await bookingAddAPI(params);
       message.success("新增成功");
+      navigate("/booking");
     }
   };
   const onChangeisBond = (e: any) => {
@@ -165,7 +167,11 @@ const MyForm: React.FC = () => {
                     <Select placeholder={item.placeholder}>
                       {item.optionList &&
                         item.optionList.map((e: any) => {
-                          return <Select.Option value={e.key}>{e?.label}</Select.Option>;
+                          return (
+                            <Select.Option key={e.key} value={Number(e.key)}>
+                              {e?.label}
+                            </Select.Option>
+                          );
                         })}
                     </Select>
                   )}
@@ -273,8 +279,16 @@ const MyForm: React.FC = () => {
                   Object.entries(drop.payment_type || {})
                     .map(([key, label]) => ({ key, label }))
                     .map((e: any) => {
-                      return <Select.Option value={e.key}>{e.label}</Select.Option>;
+                      return (
+                        <Select.Option key={e.key} value={Number(e.key)}>
+                          {e.label}
+                        </Select.Option>
+                      );
                     })}
+
+                {/* <Select.Option value={1}>预付</Select.Option>
+                <Select.Option value={2}>预付</Select.Option>
+                <Select.Option value={3}>预付</Select.Option> */}
               </Select>
             </Form.Item>
           </Col>

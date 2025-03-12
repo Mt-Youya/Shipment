@@ -8,7 +8,7 @@ const BusinessInfo: React.FC<{ data: any }> = (props) => {
     {
       key: "1",
       label: "LOGO",
-      children: <Image src="/images/login-logo.png" height={130} />,
+      children: <Image src="/images/login-logo.png" height={50} />,
       span: 2
     },
     {

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import UploadComponent from "../../components/UploadComponent";
 import { shipmentAPI, uploadAPI, uploadLogAPI } from "../../service/shipmentAPI";
 import useDetailList from "./detailList";
+import dayjs from "dayjs";
 
 const shipment = () => {
   const { drop } = useDetailList();
@@ -15,11 +16,14 @@ const shipment = () => {
   const dataForm = useRef<FormInstance>();
 
   const columns: ProColumns[] = [
-    { title: "Name", dataIndex: "title" },
+    { title: "Name", dataIndex: "title", ellipsis: true },
     {
       title: "Cargo Ready Date",
       dataIndex: "goods_date",
-      hideInSearch: true
+      hideInSearch: true,
+      render: (e, b) => {
+        return dayjs(b.goods_date).format("MMMDD, YYYY");
+      }
     },
     {
       title: "Consignee",
@@ -52,10 +56,18 @@ const shipment = () => {
       hideInSearch: true,
       render: (_, record) => record.booking_detail.volume
     },
-    { title: "Creation Date", dataIndex: "created_at", valueType: "date" },
+    {
+      title: "Creation Date",
+      dataIndex: "created_at",
+      valueType: "date",
+      render: (e, b) => {
+        return dayjs(b.created_at).format("MMMDD, YYYY");
+      }
+    },
     {
       title: "Status",
       dataIndex: "status",
+      width: 100,
       render: (text) => {
         if (text === 0) return "草稿";
         if (text === 1) return "已完成";
@@ -66,6 +78,7 @@ const shipment = () => {
             <Select
               {...rest}
               placeholder="Please enter "
+              style={{ width: "150px" }}
               options={[
                 { value: 0, label: "草稿" },
                 { value: 1, label: "已完成" }

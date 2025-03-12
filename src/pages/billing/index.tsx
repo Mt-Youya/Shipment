@@ -14,6 +14,7 @@ function Billing() {
   const navigate = useNavigate();
 
   const columns: ProColumns[] = [
+    { title: "Keywords", dataIndex: "name", hideInTable: true },
     { title: "Invoice#", dataIndex: "invoice", hideInSearch: true },
     {
       title: "HBL",
@@ -25,16 +26,6 @@ function Billing() {
         </a>
       )
     },
-    {
-      title: "Invoice Type",
-      dataIndex: "invoice_type",
-      valueType: "select",
-      valueEnum: {
-        null: "空",
-        0: "发票",
-        1: "DEBIT NOTE"
-      }
-    },
     { title: "Issued", dataIndex: "issued", hideInSearch: true },
     { title: "Due", dataIndex: "due", hideInSearch: true },
     { title: "Last Payment", dataIndex: "last_payment", hideInSearch: true },
@@ -45,6 +36,16 @@ function Billing() {
       valueEnum: {
         0: { text: "未支付", status: "Warning" },
         1: { text: "已支付", status: "Success" }
+      }
+    },
+    {
+      title: "Invoice Type",
+      dataIndex: "invoice_type",
+      valueType: "select",
+      valueEnum: {
+        null: "空",
+        0: "发票",
+        1: "DEBIT NOTE"
       }
     },
     { title: "Amount", dataIndex: "amount", hideInSearch: true },
@@ -70,8 +71,7 @@ function Billing() {
           />
         </>
       )
-    },
-    { title: "Keywords", dataIndex: "name", hideInTable: true }
+    }
   ];
 
   function handlePayment({ id }) {
@@ -94,7 +94,7 @@ function Billing() {
     <>
       <section className="py-2">
         <div className="flex justify-between">
-          <h1 className="title leading-7xl m-0">Booking</h1>
+          <h1 className="title leading-7xl m-0">Billing</h1>
           <button
             className="bg-primary text-white text-base font-bold px-2 py-1.5 border-none rounded-md cursor-pointer"
             onClick={() => navigate("/booking/detail")}
@@ -136,7 +136,8 @@ function Billing() {
             collapsed: false,
             collapseRender: false,
             searchText: "Search",
-            resetText: "Clear Filters"
+            resetText: "Clear Filters",
+            className: styles.searchBar
           }}
           dateFormatter="string"
           pagination={{

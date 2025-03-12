@@ -42,9 +42,9 @@ const Billing = () => {
       title: "Reminder Date",
       dataIndex: "created_at",
       sorter: true,
-      renderFormItem: (item, { type, defaultRender, ...rest }, form) => (
-        <DatePicker format="MMM DD, YYYY hh:mm a" showTime={{ use12Hours: true }} />
-      )
+      valueType: "date",
+      width: 200,
+      render: (_, record) => dayjs(record.created_at).format("MMMDD, YYYY hh:mm a")
     }
   ];
 

@@ -19,14 +19,14 @@ const routes: Partial<IRouteItem>[] = [
   },
   {
     key: "/booking/detail",
-    label: "/booking/detail",
+    label: "BOOKING",
     path: "/booking/detail",
     component: "booking/detail",
     showInMenu: false
   },
   {
     key: "/booking/upload",
-    label: "/booking/upload",
+    label: "UPLOAD",
     path: "/booking/upload",
     component: "booking/upload",
     showInMenu: false
@@ -110,7 +110,7 @@ const routes: Partial<IRouteItem>[] = [
       },
       {
         key: "reminders",
-        label: "SETTINGS",
+        label: "reminders",
         path: "/home/reminders",
         activePath: "/business",
         component: "home/reminders/index",

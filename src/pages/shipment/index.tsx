@@ -1,15 +1,18 @@
+import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton, Tabs } from "antd";
-import { Fragment, useEffect, useState } from "react";
-import { getShipments } from "../../service/shipments";
 import { clsx } from "clsx";
+import { getShipments } from "../../service/shipments";
+import { getDropdown } from "../../service/common.ts";
+import { ShipmentsStore } from "../../store/shipments.ts";
 import styles from "./index.module.less";
 import StepCard from "../../components/StepCard";
 
-function ShipmentTab({ type }) {
+function ShipmentTab({ type }: { type?: number }) {
   const navigate = useNavigate();
 
   const [wayBills, setWayBills] = useState<Awaited<ReturnType<typeof getShipments>>["list"]>([]);
+
   async function getData() {
     setLoading(true);
     const { list = [] } = await getShipments({ type });
@@ -17,9 +20,12 @@ function ShipmentTab({ type }) {
     setLoading(false);
   }
 
+  const { setDropdownOptions } = ShipmentsStore();
+
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     getData();
+    getDropdown().then((options) => setDropdownOptions(options));
   }, []);
 
   return loading ? (
@@ -43,7 +49,7 @@ function Shipment() {
     {
       key: "next week",
       label: "Delivered within next week",
-      children: <ShipmentTab type={2} />
+      children: <ShipmentTab type={1} />
     }
   ];
 

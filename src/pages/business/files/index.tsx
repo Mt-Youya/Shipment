@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { fileAPI } from "../../../service/shipmentAPI";
 import axios from "axios";
 import useDetailList from "../../booking/detailList";
+import dayjs from "dayjs";
 
 const Billing = () => {
   const { drop } = useDetailList();
@@ -14,7 +15,15 @@ const Billing = () => {
   const columns: ProColumns[] = [
     { title: "Job No", dataIndex: "sea_order_no" },
     { title: "File Name", dataIndex: "file_name" },
-    { title: "Date", dataIndex: "upload_time", sorter: true, valueType: "date" },
+    {
+      title: "Date",
+      dataIndex: "upload_time",
+      sorter: true,
+      valueType: "date",
+      render: (_, record) => {
+        return dayjs(record.upload_time).format("MMMDD YYYY HH:mm:ss");
+      }
+    },
     {
       title: "Uploader",
       dataIndex: "upload_user_name",
@@ -109,7 +118,7 @@ const Billing = () => {
 
           optionRender: () => [
             <Button key="search" type="primary" onClick={() => dataForm.current?.submit()}>
-              Query
+              Search
             </Button>,
             <Button
               key="reset"
@@ -120,7 +129,7 @@ const Billing = () => {
                 dataForm.current?.submit();
               }}
             >
-              Reset
+              Clear Filters
             </Button>
           ]
         }}

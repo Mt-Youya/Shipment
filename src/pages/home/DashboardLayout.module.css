@@ -9,6 +9,8 @@
     overflow: auto; /* 如果内容超出，则显示滚动条 */
     flex-direction: column; /* 使子元素垂直排列 */
     display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 
   .sidebar:nth-child(2) {
@@ -18,21 +20,29 @@
 
   .sidebarSection {
     flex: 1; /* 使每个区域占据等量的空间（这里是50%，因为有两个子区域） */
-    border-bottom: 1px solid #ddd; /* 底部分隔线，除了最后一个子区域外 */
-    box-sizing: border-box; /* 确保内边距不会增加元素的总高度 */
+    margin-right: 10px;
+    margin-left: 10px;
+    box-sizing: border-box; /* 确保内边距不会增加元素的总高度 */ 
+    height: 50%;
   }
+ 
 
 .title{
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
   justify-content:space-between;
+  height: 50px;
 }
 .RT_content{
   display: flex;
   flex-direction: column;
   /* justify-content: space-around; */
   height: 80%;
+  overflow: auto;
+}
+.RT_content::-webkit-scrollbar{
+  width: 1px;
 }
 .RT_item{
   width: 100%;

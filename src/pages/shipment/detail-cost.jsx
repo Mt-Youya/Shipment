@@ -44,7 +44,7 @@ function DetailCost({ dataSource }) {
   ];
 
   const transitColumns = [
-    { key: "mode", dataIndex: "mode", title: "MODE" },
+    { key: "mode", dataIndex: "mode_name", title: "MODE" },
     {
       key: "carrier_advertised",
       dataIndex: "carrier_advertised",

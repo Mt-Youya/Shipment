@@ -44,6 +44,10 @@ p,
     border-block-start: #CED0D1;
 }
 
+.ant-empty.ant-empty-normal {
+    margin: 0;
+}
+
 .ant-spin-nested-loading, .ant-spin-nested-loading > div {
     height: 100%;
 }
@@ -153,6 +157,7 @@ p,
 .ant-table-wrapper .ant-table-thead > tr > th {
     font-weight: 400 !important;
 }
+
 
 
 

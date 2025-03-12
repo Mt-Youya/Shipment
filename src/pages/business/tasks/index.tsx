@@ -74,6 +74,9 @@ const Billing = () => {
   const onClose = () => {
     setOpen(false);
   };
+  const updateData = () => {
+    dataForm.current?.submit();
+  };
 
   return (
     <div>
@@ -115,7 +118,7 @@ const Billing = () => {
 
           optionRender: () => [
             <Button key="search" type="primary" onClick={() => dataForm.current?.submit()}>
-              Query
+              Search
             </Button>,
             <Button
               key="reset"
@@ -126,7 +129,7 @@ const Billing = () => {
                 dataForm.current?.submit();
               }}
             >
-              Reset
+              Clear Filters
             </Button>
           ]
         }}
@@ -139,7 +142,13 @@ const Billing = () => {
         rowKey="id"
         toolBarRender={false}
       />
-      <UploadComponent upload_type={4} order_id={id.toString()} open={open} onClose={onClose} />
+      <UploadComponent
+        upload_type={4}
+        updateData={updateData}
+        order_id={id.toString()}
+        open={open}
+        onClose={onClose}
+      />
     </div>
   );
 };

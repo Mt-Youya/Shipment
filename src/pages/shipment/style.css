@@ -1,0 +1,3 @@
+:where(.css-dev-only-do-not-override-1ihmkvf).ant-divider-horizontal.ant-divider-with-text-end::after{
+    width: calc(0.15 * 100%);
+}

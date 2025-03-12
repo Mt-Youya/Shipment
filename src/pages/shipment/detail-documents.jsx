@@ -14,7 +14,7 @@ import { ProTable } from "@ant-design/pro-components";
 function DetailDocuments() {
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
   const [loading, setLoading] = useState(false);
 
   const { id } = useParams();
@@ -42,7 +42,7 @@ function DetailDocuments() {
   }
 
   function onPageChange(current, pageSize) {
-    getDocuments({ ...form.getFieldsValue(), page: current });
+    getDocuments({ ...form.getFieldsValue(), page: current, per_page: pageSize });
   }
 
   const { setFiles } = useOssUploadFile(2, id, () => getDocuments());
@@ -84,18 +84,6 @@ function DetailDocuments() {
       valueEnum: dropdownOptions?.upload_user[0]
     },
     {
-      key: "upload",
-      hideInForm: true,
-      hideInSearch: true,
-      hideInTable: true,
-      render: () => (
-        <Button type="primary" className="cursor-pointer" onClick={() => input.click()}>
-          Upload file
-        </Button>
-      )
-    },
-
-    {
       key: "action",
       dataIndex: "action",
       title: "Action",
@@ -117,35 +105,33 @@ function DetailDocuments() {
 
   return (
     <>
-      {/*<Form form={form} className="my-2" layout="inline" onValuesChange={handleValuesChange}>*/}
-      {/*  <Form.Item name="file_name" label="File Name">*/}
-      {/*    <Input placeholder="Please enter" />*/}
-      {/*  </Form.Item>*/}
-      {/*  <Form.Item name="upload_date" label="Upload Date">*/}
-      {/*    <DatePicker placeholder="Please select date" />*/}
-      {/*  </Form.Item>*/}
-      {/*  <Form.Item name="user_id" label="Uploader">*/}
-      {/*    <Select options={options} placeholder="Please select" />*/}
-      {/*  </Form.Item>*/}
-      {/*  <Button type="primary" className="cursor-pointer" onClick={() => input.click()}>*/}
-      {/*    Upload file*/}
-      {/*  </Button>*/}
-      {/*</Form>*/}
+      <Form form={form} className="my-2" layout="inline" onValuesChange={handleValuesChange}>
+        <Form.Item name="file_name" label="File Name">
+          <Input placeholder="Please enter" />
+        </Form.Item>
+        <Form.Item name="upload_date" label="Upload Date">
+          <DatePicker placeholder="Please select date" />
+        </Form.Item>
+        <Form.Item name="user_id" label="Uploader">
+          <Select options={options} placeholder="Please select" />
+        </Form.Item>
+        <Button type="primary" className="cursor-pointer" onClick={() => input.click()}>
+          Upload file
+        </Button>
+      </Form>
 
-      <ProTable
+      <Table
         bordered
         rowKey="id"
-        formRef={form}
-        toolBarRender={false}
-        request={async (params) => {
-          const { list, meta } = await getShipmentDetailFile(id, {
-            ...params,
-            page: params.current
-          });
-          return { data: list, success: true, total: meta.total };
+        dataSource={data}
+        loading={loading}
+        pagination={{
+          ...pagination,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          onChange: onPageChange,
+          showTotal: (total) => `Total ${total} Entries`
         }}
-        pagination={{ pageSize: 10 }}
-        // pagination={{ ...pagination, onChange: onPageChange }}
         columns={columns}
         rowSelection={{
           selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT]

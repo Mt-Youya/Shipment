@@ -48,6 +48,7 @@ export interface IShipmentType {
    */
   departure_port: string;
   id: number;
+  order_no: string;
   /**
    * 状态文本
    */

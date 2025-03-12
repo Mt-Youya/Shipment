@@ -5,12 +5,12 @@ export function PrimaryTable({ sum, dataSource, ...props }) {
     <Table
       bordered
       rowKey="id"
-      className="mt-1 mx-1"
+      className="mt-1 mx-1 pb-0"
       pagination={false}
       footer={() => (
         <ul className="list-none my-0 p-0 grid grid-cols-3 w-full text-center">
           <li>Subtotal</li>
-          <li>USD</li>
+          <li>CNY</li>
           <li>{(+sum).toFixed(2)}</li>
         </ul>
       )}

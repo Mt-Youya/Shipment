@@ -38,6 +38,8 @@ class HttpRequest {
       async (response: AxiosResponse<ResponseModel>): Promise<any> => {
         const { data } = response;
         const { code, msg } = data;
+        console.log();
+
         if (code !== undefined) {
           if (code !== HttpCodeConfig.success) {
             notification.open({
@@ -59,8 +61,7 @@ class HttpRequest {
         } else if (code === 401) {
           Session.clear();
           Local.clear();
-          location.reload();
-          return;
+          return location.replace("/#/login");
         } else {
           return Promise.reject(new Error("Error! code missing!"));
         }

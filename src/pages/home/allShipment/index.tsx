@@ -5,6 +5,7 @@ import ProgressComp from "./progressComp";
 import { Button, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import fullLoading from "../../../components/loading";
+import dayjs from "dayjs";
 
 function index() {
   const navigator = useNavigate();
@@ -26,9 +27,9 @@ function index() {
   };
 
   return (
-    <div>
+    <div style={{ height: "100%" }}>
       <div className={styles.title}>
-        <h3 style={{ marginLeft: "10px" }}>All Shipment</h3>
+        <div style={{ fontSize: "24px", fontWeight: "700" }}>All Shipment</div>
         <div style={{ marginRight: "10px" }}>
           <Select
             onChange={(value) => {
@@ -98,20 +99,23 @@ function index() {
             <div key={e.order_id} className={styles.RT_item}>
               <div className={styles.RT_itemone}>{e.title}</div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div>
-                  <span className={styles.RT_itemtwo}>
-                    PO:
-                    {e.po_order.join(",").length > 60
-                      ? e.po_order.join(",").substring(0, 60) + "..."
-                      : e.po_order.join(",")}
-                  </span>
+                <div style={{ maxWidth: "300px" }}>
+                  {e.po_order.length > 0 &&
+                    e.po_order.map((item) => (
+                      <span
+                        className={styles.RT_itemtwo}
+                        style={{ whiteSpace: "pre-wrap", margin: "2px" }}
+                      >
+                        {item}
+                      </span>
+                    ))}
                 </div>
                 <ProgressComp currentStatus={e.order_progress} />
               </div>
 
               <div style={{ display: "flex", alignItems: "center" }}>
                 <img src="/images/time.png" alt="" style={{ marginRight: "5px" }} />
-                {e.date}
+                CRD:{e.date ? dayjs(e.date).format("MMMDD") : ""}
               </div>
             </div>
           ))}

@@ -31,14 +31,14 @@ const DashboardLayout: React.FC = () => {
         <div className={styles.sidebarSection}>
           <HandleWeekChange data={data} currentDate={currentDate} setCurrentDate={setCurrentDate} />
         </div>
-        <div className={styles.sidebarSection} style={{ overflow: "hidden" }}>
+        <div className={styles.sidebarSection}>
           <AllShipment />
         </div>
       </div>
       <div className={styles.sidebar} style={{ flexBasis: "40%" }}>
         <div className={styles.sidebarSection}>
           <div className={styles.title}>
-            <h3 style={{ marginLeft: "10px" }}>Task</h3>
+            <div style={{ fontSize: "24px", fontWeight: "700" }}>Task</div>
             <Button
               style={{ marginRight: "10px" }}
               onClick={() => {
@@ -53,7 +53,7 @@ const DashboardLayout: React.FC = () => {
         {/* 提醒 */}
         <div className={styles.sidebarSection}>
           <div className={styles.title}>
-            <h3 style={{ marginLeft: "10px" }}>Reminders</h3>
+            <div style={{ fontSize: "24px", fontWeight: "700" }}>Reminders</div>
             <Button
               style={{ marginRight: "10px" }}
               onClick={() => {
@@ -71,12 +71,19 @@ const DashboardLayout: React.FC = () => {
                   return (
                     <div className={styles.RT_item} key={e.id}>
                       <div className={styles.RT_itemone}>{e.title}</div>
-                      <span className={styles.RT_itemtwo}>
-                        PO:
-                        {e.po_list.join(",").length > 60
-                          ? e.po_list.join(",").substring(0, 60) + "..."
-                          : e.po_list.join(",")}
-                      </span>
+                      {e.po_list &&
+                        e.po_list.length > 0 &&
+                        e.po_list.map((item) => {
+                          return (
+                            <span
+                              className={styles.RT_itemtwo}
+                              style={{ whiteSpace: "pre-wrap", margin: "2px" }}
+                            >
+                              {item}
+                            </span>
+                          );
+                        })}
+
                       <div style={{ display: "flex", justifyContent: "space-between" }}>
                         <div style={{ display: "flex", alignItems: "center" }}>
                           <img src="images/Group18.png" alt="" />
@@ -84,7 +91,7 @@ const DashboardLayout: React.FC = () => {
                         </div>
                         <div style={{ display: "flex", alignItems: "center" }}>
                           <img src="images/time.png" alt="" />
-                          {dayjs(e.created_at).format("YYYY-MM-DD")}
+                          ETD:{dayjs(e.created_at).format("MMMDD")}
                         </div>
                       </div>
                     </div>

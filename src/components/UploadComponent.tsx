@@ -26,10 +26,10 @@ const UploadBookingFormat: React.FC<UploadBookingFormatProps> = ({
   const [historyList, setHistoryList] = useState<any[]>([]);
 
   useEffect(() => {
-    console.log(open);
-
     if (open === true) {
       getHistory();
+      setFileList([]);
+      form.resetFields();
     }
   }, [open]);
   const getHistory = async () => {
@@ -39,7 +39,6 @@ const UploadBookingFormat: React.FC<UploadBookingFormatProps> = ({
         order_id
       });
       setHistoryList(res.list);
-      console.log(res.list);
     } catch (error) {}
   };
   const columns = [

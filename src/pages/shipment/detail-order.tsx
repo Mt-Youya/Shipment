@@ -1,9 +1,10 @@
+import { useMemo } from "react";
 import { ShipmentsStore } from "../../store/shipments.ts";
 import VerticalSlider from "../../components/VerticalSlider";
 import ShippingInfo from "../../components/ShippingInfo";
+import formatDateTime from "../../utils/formatDateTime.ts";
 
 import type { IShipmentMap } from "../../service/shipments/shipment.type.ts";
-import { useMemo } from "react";
 
 function DetailOrder() {
   const { mapData } = ShipmentsStore();
@@ -100,12 +101,15 @@ function DetailOrder() {
   return (
     <div>
       <div>
-        <h2>{time?.time_type}</h2>
-        <p>{time?.time_value}</p>
-        <span>{time?.created_at}</span>
+        <h2 className="text-[#69686D] font-normal">{time?.time_type}</h2>
+        <p className="font-bold text-2xl mb-0.5">{formatDateTime(time?.time_value)}</p>
+        <span>{formatDateTime(time?.created_at)}</span>
       </div>
-      <div className="w-full h-30 my-2">
-        <iframe className="w-full h-full" src={mapData?.url} />
+      <div
+        className="w-full h-30 mt-2 mb-3 overflow-hidden"
+        style={{ borderTopRightRadius: ".5rem", borderTopLeftRadius: ".5rem" }}
+      >
+        <iframe className="w-full h-full border-none" src={mapData?.url} />
       </div>
       <VerticalSlider items={sliders} />
     </div>

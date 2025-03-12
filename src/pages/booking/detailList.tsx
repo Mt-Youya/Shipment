@@ -6,17 +6,6 @@ interface ChildType {
   label: string;
 }
 
-interface DetailItemType {
-  type: string;
-  id: number;
-  label: string;
-  name: string;
-  placeholder?: string;
-  col: string;
-  children?: ChildType[];
-  optionList?: ChildType[]; // 用于下拉选项
-}
-
 const useDetailList = () => {
   const [drop, setDrop] = useState<ChildType[]>({});
 
@@ -37,7 +26,7 @@ const useDetailList = () => {
       {
         type: "input",
         id: 1,
-        label: "查询单号",
+        label: "询价单号",
         name: "inquiry_no",
         placeholder: "请输入",
         col: "6"
@@ -123,6 +112,7 @@ const useDetailList = () => {
         id: 13,
         label: "运输条款",
         name: "transport_type",
+        placeholder: "请输入",
         col: "6",
         optionList: Object.entries(drop.delivery_type || {}).map(([key, label]) => ({
           key,

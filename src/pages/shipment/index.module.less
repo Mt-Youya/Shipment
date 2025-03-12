@@ -3,19 +3,55 @@
     .ant-tabs-tab-btn {
       font-size: 1.5rem;
     }
-    .ant-tabs-content{
-      height:calc(100vh - 120px);
+
+    .ant-tabs-content {
+      height: calc(100vh - 120px);
     }
+
     .ant-tabs-tabpane {
       height: 100%;
+    }
+
+  }
+}
+
+:global {
+
+  .divider {
+    .ant-divider-inner-text {
+      padding-inline: 0;
+    }
+
+    .ant-divider-horizontal.ant-divider-with-text-end::after {
+      width: calc(0.15 * 100%);
     }
   }
 }
 
-.divider {
+
+.detailTabs {
   :global {
-    .ant-divider-inner-text {
-      padding-inline: 0;
+    .ant-tabs-card {
+      &.ant-tabs-top {
+        & > .ant-tabs-nav .ant-tabs-tab {
+          border-radius: 0;
+        }
+      }
+
+      .ant-tabs-nav-list {
+        .ant-tabs-tab {
+          margin: 0 !important;
+        }
+      }
+
+      .ant-tabs-content.ant-tabs-content-top {
+        border: 1px solid #f0f0f0;
+      }
+
+      .ant-table-wrapper {
+        padding: 10px;
+      }
     }
+
   }
 }

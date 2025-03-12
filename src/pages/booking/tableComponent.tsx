@@ -28,16 +28,8 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   unit: string;
 }
 
-const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
+const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = (props) => {
+  const { editing, dataIndex, title, inputType, record, index, children, ...restProps } = props;
   const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
 
   return (
@@ -83,14 +75,7 @@ const App: React.FC<AppProps> = ({ tableData, setTableData }) => {
   const isEditing = (record: DataType) => record.key === editingKey;
 
   useEffect(() => {
-    if (tableData.length === 0) {
-      const tempOriginData = originData.map((item, index) => ({
-        ...item,
-        key: index.toString()
-      }));
-      setTableData(tempOriginData);
-      setCount(originData.length);
-    }
+    // 移除原有的逻辑，不再默认填充两行数据
   }, [tableData]);
 
   const edit = (record: Partial<DataType> & { key: React.Key }) => {
@@ -140,7 +125,10 @@ const App: React.FC<AppProps> = ({ tableData, setTableData }) => {
   const columns = [
     {
       title: "编号",
-      dataIndex: "key"
+      dataIndex: "key",
+      render: (e) => {
+        return Number(e) + 1;
+      }
     },
     {
       title: "唛头",
@@ -189,17 +177,14 @@ const App: React.FC<AppProps> = ({ tableData, setTableData }) => {
       render: (_: any, record: DataType) => {
         const editable = isEditing(record);
         return editable ? (
-          <>
-            <Space>
-              <Typography.Link onClick={() => save(record.key)} style={{ marginInlineEnd: 8 }}>
-                保存
-              </Typography.Link>
-
-              <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                <a>取消</a>
-              </Popconfirm>
-            </Space>
-          </>
+          <Space>
+            <Typography.Link onClick={() => save(record.key)} style={{ marginInlineEnd: 8 }}>
+              保存
+            </Typography.Link>
+            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+              <a>取消</a>
+            </Popconfirm>
+          </Space>
         ) : (
           <Space>
             <Popconfirm title="Sure to cancel?" onConfirm={() => handleDelete(record.key)}>
@@ -258,7 +243,6 @@ const App: React.FC<AppProps> = ({ tableData, setTableData }) => {
         rowClassName="editable-row"
         pagination={false}
       />
-
       <Button
         style={{ width: "100%", textAlign: "center", margin: "10px auto", display: "block" }}
         type="dashed"

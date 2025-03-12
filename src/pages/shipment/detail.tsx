@@ -5,7 +5,6 @@ import { Divider, Table, Tabs } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import { isEmpty } from "lodash-es";
 import { ShipmentsStore } from "../../store/shipments.ts";
-import { getDropdown } from "../../service/common.ts";
 import DetailOwn from "./detail-own.jsx";
 import DetailDocuments from "./detail-documents.jsx";
 import DetailCost from "./detail-cost.jsx";
@@ -13,8 +12,10 @@ import DetailBill from "./detail-bill.jsx";
 import DrawerUpload from "../../components/DrawerUpload";
 import randomUUID from "../../utils/randomUUID.ts";
 import styles from "./index.module.less";
+import "./style.css"
 
 import type { AwaitedReturn } from "../../utils/common.type.ts";
+import formatDateTime from "../../utils/formatDateTime.ts";
 
 function ShipmentDetails() {
   const { id } = useParams();
@@ -31,30 +32,34 @@ function ShipmentDetails() {
     setState(detailData);
   }
 
-  const { setMapData, mapData, setDropdownOptions, dropdownOptions } = ShipmentsStore();
+  const { setMapData, mapData, dropdownOptions } = ShipmentsStore();
 
   useEffect(() => {
     getDetail();
     getShipmentMap(id).then((res) => setMapData(res));
-    getDropdown().then((options) => setDropdownOptions(options));
   }, []);
 
   const taskColumns = [
     { title: "", key: "index", render: (_, __, index) => index + 1 },
-    { title: "Task", dataIndex: "tittle", key: "task" },
+    { title: "Task", dataIndex: "title", key: "task" },
     {
       title: "Status",
       dataIndex: "created_at",
       key: "created_at",
       render: (_, item) => (
         <>
-          <span>{item.created_at}</span>
+          <span>{formatDateTime(item.created_at)}</span>
           <br />
           <span className="font-light">Task created at</span>
         </>
       )
     },
-    { title: "Deadline", dataIndex: "deadline", key: "deadline" },
+    {
+      title: "Deadline",
+      dataIndex: "deadline",
+      key: "deadline",
+      render: (item) => formatDateTime(item)
+    },
     {
       title: "Operate",
       key: "operate",
@@ -149,11 +154,11 @@ function ShipmentDetails() {
   }
 
   return (
-    <section>
+    <section className="mr-2">
       <div>
         <div>
           <div className="flex justify-between py-1.5">
-            <h1 className="w-[500px] my-0">{state?.title}</h1>
+            <h1 className="w-[500px] my-0 text-2xl">{state?.title}</h1>
             <ul className="list-none p-0 m-0 flex justify-end gap-1">
               {state?.po_list.map((po, pIdx) => (
                 <li
@@ -190,7 +195,7 @@ function ShipmentDetails() {
           )}
         </Divider>
         <div className="flex justify-between">
-          <div className={`min-w-[1000px] w-full`}>
+          <div className={`min-w-[1000px] w-full ${styles.detailTabs}`}>
             <Tabs items={taskItems} type="card" />
             <br />
             <Tabs items={orderItems} onChange={(e) => setTabKey(e)} />

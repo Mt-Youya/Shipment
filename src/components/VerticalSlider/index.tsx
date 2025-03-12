@@ -21,7 +21,7 @@ function FourNodeSlider({ items }: IProps) {
   const mainIndex = useMemo(() => items.findIndex((item) => item.isMain), [items]);
 
   return (
-    <div className="max-w-[1000px] min-w-40">
+    <div className="max-w-[1000px] min-w-45">
       <div className="relative flex flex-col border border-gray-200 mb-1 rounded-b-1">
         <div className="absolute w-1 h-full bg-[#D9D9D9] left-0.5 z-10 rounded-lg" />
         {list.map(({ showBar = true, ...item }, idx) => (
@@ -30,8 +30,8 @@ function FourNodeSlider({ items }: IProps) {
             className="relative flex-col flex items-start left-0.5 z-20 pl-2 -mt-0.5 w-full"
           >
             <div className="w-full">
-              <div className="mb-1">{item.description}</div>
-              <div className={`flex-1 mb-2`}>{item.content}</div>
+              <div className="mb-1 text-base">{item.description}</div>
+              <div className={`flex-1 mb-2 text-xs`}>{item.content}</div>
             </div>
             <div className="absolute left-0 w-fit min-w-1 h-full">
               <div className="flex justify-center absolute">
@@ -63,8 +63,8 @@ function FourNodeSlider({ items }: IProps) {
       </div>
       <div className="relative flex-col flex items-start left-0.5 z-20 pl-2 -mt-2">
         <div>
-          {lastItem.description && <div className="mb-1 font-bold">{lastItem.description}</div>}
-          <div className={`flex-1 mb-1`}>{lastItem.content}</div>
+          {lastItem.description && <div className="mb-1 font-bold text-base">{lastItem.description}</div>}
+          <div className={`flex-1 mb-1 text-xs`}>{lastItem.content}</div>
         </div>
       </div>
     </div>

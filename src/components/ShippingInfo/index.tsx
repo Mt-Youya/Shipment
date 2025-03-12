@@ -1,6 +1,7 @@
 import { Fragment, useMemo } from "react";
 import { Divider, Popover } from "antd";
 import { ArrowRightOutlined, FileTextOutlined } from "@ant-design/icons";
+import formatDateTime from "../../utils/formatDateTime.ts";
 
 import type { ActionTime, IShipmentMap } from "../../service/shipments/shipment.type.ts";
 
@@ -69,7 +70,7 @@ function ShippingInfo({ data, optionName }: IProps) {
           <img src="/images/icons/Car.svg" alt="car" />
         </div>
         <div className="mb-1">
-          <h1 className="text-xl font-bold text-gray-800 my-0">{data?.transfer_type}</h1>
+          <h1 className="text-xl font-bold text-gray-800 mt-0 mb-0.5">{data?.transfer_type}</h1>
           <div className="text-[#A3A3A3]">{data?.expect_time}</div>
         </div>
       </div>
@@ -81,7 +82,7 @@ function ShippingInfo({ data, optionName }: IProps) {
             <BoxNumber number={container_no} />
             <div className="flex gap-0.5">
               <img src="/images/icons/Ship.svg" alt="ship" />
-              <p className="text-lg font-semibold text-primary">{transfer_info}</p>
+              <p className="text-sm font-semibold text-primary">{transfer_info}</p>
             </div>
             <br />
             <TransferList options={optionName === "depart" ? departOptions : podOptions} />
@@ -110,9 +111,9 @@ function BoxNumber({ number }: { number: string[] }) {
   return (
     <div className="flex items-start mb-1 gap-0.5">
       <FileTextOutlined style={{ color: "#566AE5" }} />
-      <ul className="m-0 -mt-[2px] p-0 grid grid-cols-2 gap-1 text-sm list-none">
+      <ul className="m-0 -mt-[2px] p-0 grid grid-cols-2 gap-1 font-medium list-none text-sm">
         {(Array.isArray(number) ? number : [number]).map((num, index) => (
-          <li key={index} className="font-bold  text-primary">
+          <li key={index} className="text-primary">
             <span className="tracking-wider">{num}</span>
           </li>
         ))}
@@ -133,10 +134,12 @@ function TransferList({ options }: { options: IOption[] }) {
           <span className="text-sm text-[#A3A3A3] mb-0.5">{label}</span>
           {children && children?.length >= 2 ? (
             <Popover content={<TransferPopper data={children} />} title="Latest Update">
-              <span className="font-medium text-[#171629] underline"> {value}</span>
+              <span className="text-xs font-semibold text-[#171629] underline">
+                {formatDateTime(value)}
+              </span>
             </Popover>
           ) : (
-            <span className="font-medium text-[#171629]">{value}</span>
+            <span className="text-xs font-semibold text-[#171629]">{formatDateTime(value)}</span>
           )}
         </div>
       ))}
@@ -154,12 +157,12 @@ function TransferPopper({ data }: { data: ActionTime[] }) {
             <div className="flex">
               <div className="flex flex-col">
                 <span className="text-[#A3A3A3]"> Sched. Departure </span>
-                <span className="line-through">{array[index + 1]?.time_value}adfgadfg </span>
+                <span className="line-through">{formatDateTime(array[index + 1]?.time_value)}</span>
               </div>
               <ArrowRightOutlined className="mx-2" />
               <div className="flex flex-col">
                 <span className="text-[#A3A3A3]"> Departed</span>
-                <span className="underline">{item?.time_value} </span>
+                <span className="underline">{formatDateTime(item?.time_value)} </span>
               </div>
             </div>
             <span>{item.created_at}</span>

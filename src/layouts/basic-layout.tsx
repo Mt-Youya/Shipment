@@ -88,6 +88,13 @@ const BasicLayout = () => {
             colorSplit: "#e7e7e7",
             borderRadiusLG: 0,
             contentColor: "#171629"
+          },
+          Segmented: {
+            itemHoverBg: "#566AE5",
+            itemSelectedBg: "#566AE5",
+            itemSelectedColor: "white",
+            itemHoverColor: "white",
+            itemActiveBg: "#566AE5"
           }
         }
       }}

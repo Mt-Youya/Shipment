@@ -24,6 +24,7 @@ const ShipmentStatus: React.FC<ShipmentStatusProps> = ({ currentStatus }) => {
   };
 
   const progress = getProgressPercentage(status, currentStatus);
+
   const circleWidth = 8; // 圆球宽度
   const circleSpacing = circleWidth / 2; // 圆球之间的间距
   const totalWidth = 300; // 进度条宽度
@@ -33,16 +34,12 @@ const ShipmentStatus: React.FC<ShipmentStatusProps> = ({ currentStatus }) => {
       <Progress percent={progress} strokeColor="#1890ff" trailColor="#ebedf0" showInfo={false} />
       {status.map((_, index) => {
         const percent = (index / (status.length - 1)) * 100;
-        const offset =
-          (percent / 100) * (totalWidth - circleWidth - circleSpacing * (status.length - 1));
-        const left = `${offset + index * (circleWidth + circleSpacing)}px`;
-
         return (
           <div
             key={index}
             style={{
               position: "absolute",
-              left: left,
+              left: percent + "%",
               top: "9px", // 调整圆点到进度条上方的距离
               width: `${circleWidth}px`,
               height: `${circleWidth}px`,
