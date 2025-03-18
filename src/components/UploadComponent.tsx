@@ -129,13 +129,12 @@ const UploadBookingFormat: React.FC<UploadBookingFormatProps> = ({
         headers: { "Content-Type": "application/pdf" } // 设置 Content-Type 为 PDF
       });
       console.log(result);
-
       // 上传成功
       onSuccess("ok");
       setFileList([
         ...fileList,
         {
-          file_name: result.name,
+          file_name: file.name,
           path: result.url,
           file_type: result.name.split(".").pop().toLowerCase(),
           file_size: file.size

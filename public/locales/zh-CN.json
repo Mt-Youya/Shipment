@@ -1,16 +1,488 @@
 {
-  "menu": {
+  "sideBar": {
     "home": "首页",
-    "booking": "订舱列表",
-    "shipment": "运单列表",
-    "billing": "账单列表",
-    "business": "我的业务",
+    "shipment": "运单",
+    "booking": "订舱",
+    "billing": "账单",
+    "business": "业务",
     "business-tasks": "任务",
-    "business-files": "文件",
-    "business-settings": "设置"
+    "business-files": "文档",
+    "business-settings": "设置",
+    "lang": "中文",
+    "message": "消息"
   },
   "info-bar": {
-    "lang": "English",
+    "lang": "中文",
     "message": "消息"
+  },
+  "home": {
+    "index": "首页",
+    "booking": "订舱",
+    "instruction": "补料",
+    "shipment": "运单",
+    "billing": "账单",
+    "business": "您的业务",
+    "task": "任务",
+    "documents": "文档",
+    "setting": "设置",
+    "pickup": "提货",
+    "deliveries": "派送",
+    "address": "地址",
+    "票货运": "票货运",
+    "container": "柜",
+    "viewAll": "查看全部",
+    "allShipment": "全部运单",
+    "crd": "货好日期",
+    "deliveryDate": "交货日期",
+    "DOU": "最新船期变化",
+    "TOC":"创建时间",
+    "DAD":"目的地到达日期",
+    "descending": "顺序",
+    "ascending": "倒序",
+    "Pending to POL→Arrival POL→In transit→Arrival POD→Deliver to Consignee→Delivery completed": "等待到达起运港→到达起运港→船开ETD→船开ATD→船舶到港ETA→船舶到港ATA→尾端派送→已送达",
+    "Reminders": "提醒事项"
+  },
+  "common": {
+    "jobNo": "工作单号",
+    "nodeName": "节点名称",
+    "reminderDate": "提醒日期",
+    "reminderContent": "提醒内容",
+    "total": "共",
+    "entries": "条记录",
+    "items/page": "条/页",
+    "goToPage": "跳至页",
+    "paid": "已支付",
+    "unpaid": "未支付",
+    "search": "搜索",
+    "clear": "清空",
+    "upload files": "上传文件"
+  },
+  "selections": {
+    "yes": "是",
+    "no": "否",
+    "paid": "已支付",
+    "unpaid": "未支付",
+    "null": "空",
+    "bill": "账单",
+    "debit note": "DEBIT NOTE"
+  },
+  "booking": {
+    "name": "名称",
+    "shipper": "发货人",
+    "consignee": "收货人",
+    "status": "状态",
+    "creation Date": "创建日期",
+    "new booking": "新建订舱",
+    "cargo Ready Date": "货好日期",
+    "weight": "重量",
+    "volume": "体积",
+    "action": "操作",
+    "quotation number": "询价单号",
+    "notify Party": "通知人",
+    "aLSO NOTIFY": "第二通知人",
+    "place Of Receipt": "收货地",
+    "port Of Loading": "起运港",
+    "port Of Discharge": "目的港",
+    "place Of Delivery": "目的地",
+    "shipment type": "业务类型",
+    "quantity": "箱型数量",
+    "inco-Terms": "贸易条款",
+    "service Type": "运输条款",
+    "delivery Address": "派送地址",
+    "types Of Goods": "货物种类",
+    "cRD": "货好日期",
+    "insurance Required ?": "是否需要保险",
+    "yes": "是",
+    "no": "不需要",
+    "oil Included ?": "含油",
+    "batteries Included ?": "含电",
+    "wooden Packing?": "含木质包装",
+    "fUMIGATED OR NOT": "是否黑蒸",
+    "marks &Numbers": "唛头",
+    "quality": "件数",
+    "package": "包装单位",
+    "commodity": "中英文名称",
+    "hS CODE": "HS CODE",
+    "gross Weight": "重量",
+    "value": "货值=发票金额",
+    "add New Item": "新增",
+    "vGM Required ?": "是否需要顺欣达申报VGM",
+    "trucking required?": "拖车安排",
+    "pICK UP DATE": "装货时间",
+    "pick Up Address": "装货地址",
+    "contact": "联系人",
+    "special Requests": "特别要求",
+    "export Customs Declaration Required ?": "报关安排",
+    "bOND": "针对美线出运货物,进口商是否需要购买BOND",
+    "importer's Self-Purchase": "进口商自行购买",
+    "sXD Proxy Purchase": "SXD代买",
+    "bond Type": "BOND类型",
+    "annual Bond": "年BOND",
+    "single Entry Bond": "次BOND",
+    "freight & Charges": "付款方式",
+    "prepayment": "预付",
+    "freight Amount": "运费金额",
+    "precautions": "注意事项",
+    "upload booking letter": "上传订舱委托书",
+    "confirm and download the booking letter": "确认并下载订舱委托书",
+    "upload Booking Format": "上传订舱",
+    "booking Format": "订舱委托书",
+    "upload files": "上传文件",
+    "supported extensions: .pdf": "支持格式: .pdf"
+  },
+  "shipment": {
+    "all shipment in processs": "进行中",
+    "delivered within next week": "下周送达",
+    "status": "状态",
+    "mode": "模式",
+    "pending Tasks": "待处理任务",
+    "completed Tasks": "已完成任务",
+    "task": "任务",
+    "status": "状态",
+    "due": "截止日期",
+    "details": "详情",
+    "service": "服务",
+    "estimated cost": "预估成本",
+    "trade Terms": "贸易条款",
+    "service Type": "运输条款",
+    "I/E": "进出口",
+    "container": "集装箱信息",
+    "qty": "柜量",
+    "type": "柜型",
+    "container No.": "柜号",
+    "seal No.": "封号",
+    "carrier": "船公司",
+    "hbl": "HBL",
+    "cargo details": "货物详情",
+    "commodity": "品名",
+    "gross Weight": "重量",
+    "quality": "件数",
+    "package": "包装单位",
+    "volume": "体积",
+    "documents": "文件",
+    "file Name": "文件名称",
+    "upload Date": "上传日期",
+    "uploader": "上传人",
+    "upload file": "上传文件",
+    "file Name": "文件名称",
+    "date": "上传日期",
+    "uploader": "上传人",
+    "upload files": "上传文件",
+    "upload": "上传",
+    "upload files": "上传文件",
+    "supported extensions: .pdf.png": "支持扩展名：.pdf.png",
+    "history": "历史",
+    "file Name": "文件名称",
+    "date": "日期",
+    "audit opinion": "反馈意见",
+    "quote": "询价单号",
+    "carrier": "承运人",
+    "carrier-advertised": "航行时间",
+    "total": "合计",
+    "expires": "有效期",
+    "quote Details:": "预估成本详情",
+    "transit Information": "航运信息",
+    "mode": "运输方式",
+    "CARRIER-ADVERTISED": "航行时间",
+    "rATE EXPIRATION": "价格有效期",
+    "CARRIER": "承运人",
+    "FREIGHT SERVICE": "运输条款",
+    "CLOSING DAYS": "休息日",
+    "DEPARTURE DAYS": "出发日期",
+    "PRE-CARRIAGE": "前期运输",
+    "rate Information": "报价信息",
+    "ORIGIN CHARGES": "起运港费用",
+    "OCEAN FREIGHT": "海运费",
+    "DESTINATION CHARGES": "目的港费用",
+    "DUTY": "税金",
+    "cost Breakdown": "费用细分",
+    "currency": "币种",
+    "unit price": "单价",
+    "quantity": "数量",
+    "unit": "单位",
+    "route": "路径",
+    "subtotal": "小计",
+    "origin": "起源",
+    "origin Dwell": "起源停留",
+    "port to Port(Flexport Est.)": "港口到港口(Flexport Est.)",
+    "destination Dwell": "目的地停留",
+    "destination": "目的地",
+    "place of pick up": "提货地址",
+    "DEPARTURE PORT": "起运港",
+    "TRANSIT PORT": "中转港",
+    "ARRIVAL PORT": "目的港",
+    "place of delivery": "收货地址",
+    "bill": "账单",
+    "invoice#": "发票号",
+    "issued": "签发日",
+    "due": "到期日",
+    "last Payment": "最后付款",
+    "status": "状态",
+    "amount": "总费用",
+    "balance": "未付金额",
+    "crd": "货好日期",
+    "Arrived": "到达起运港时间",
+    "ETD": "预计离港日",
+    "ETA": "预计到港日",
+    "Est. Delivery": "预计派送时间",
+    "Est. Arrival": "预计送达时间",
+    "Est. Pickup": "预计提货时间",
+    "cargo pick up": "提货日",
+    "departed": "已离开",
+    "arrived": "已到达",
+    "CY Cutoff": "截重柜",
+    "Est. Departure": "预计离港日",
+    "Est. Arrival": "预计到港日",
+    "carrier": "船公司",
+    "vessel": "船名",
+    "tracking": "航次",
+    "departed": "已离港",
+    "arrived": "已到达",
+    "The boat is sailing": "船儿正在航行",
+    "est. Departure": "预计离港日",
+    "est. Arrival": "预计到港日",
+    "carrier": "船公司",
+    "departed": "已离港",
+    "arrived": "已到达",
+    "ORIGIN_CHARGES": "原产地收费",
+    "SURCHARGE": "附加费",
+    "DESTINATION_CHARGES": "目的地费用",
+    "ALL_IN": "全部",
+    "SERVICE_FEE": "服务费",
+    "action": "操作"
+  },
+  "billing": {
+    "billing": "账单",
+    "keywords": "关键词",
+    "status": "状态",
+    "invoice Type": "发票类型",
+    "batch Payment": "批量支付",
+    "invoice#": "发票号",
+    "hbl": "HBL",
+    "invoice Type": "发票类型",
+    "issued": "创建时间",
+    "due": "截止日期",
+    "last Payment": "上次支付日期",
+    "status": "状态",
+    "amount": "总费用",
+    "balance": "未付金额",
+    "action": "操作",
+    "invoice": "发票",
+    "debit note": "借记单",
+    "MAKE PAYMENT": "线上支付",
+    "No Recipient": "无收件人",
+    "issue Date": "签发日",
+    "due Date": "截止日",
+    "invoice Total": "总金额",
+    "credit Applied": "信用申请",
+    "paid Amount": "已付金额",
+    "balance Due": "应付余额",
+    "recipient": "接收人",
+    "invoice Details": "发票详情",
+    "cost Description": "费用说明",
+    "cost Unit Name": "成本单位名称",
+    "unit Price": "单价",
+    "quality": "数量",
+    "unit": "币种",
+    "price": "金额",
+    "status": "状态",
+    "containers": "柜号",
+    "download All": "下载全部",
+    "documents": "文件",
+    "action": "操作",
+    "upload Bank Receipt": "上传水单",
+    "upload Bank Receipt": "上传水单",
+    "upload files": "上传文件",
+    "quotation_unit_price_tax": "单位",
+    "submit": "提交",
+    "cancel": "取消"
+  },
+  "business": {
+    "Tasks": "任务",
+    "Job No": "工作单号",
+    "Due": "截止日期",
+    "Consignee": "收货人",
+    "Status": "状态",
+    "Files": "文件库",
+    "Job No": "工作单号",
+    "File Name": "文件名称",
+    "Date": "上传日期",
+    "Uploader": "上传人",
+    "Job No": "工作单号",
+    "File Name": "文件名称",
+    "Date": "上传日期",
+    "Uploader": "上传人",
+    "Settings": "设置",
+    "English Company Name": "公司名称(英文)",
+    "Settlement Type": "结算方式",
+    "General": "基本信息",
+    "Address(EN)": "地址(英文)",
+    "Address(CN)": "地址(中文)",
+    "Bill of Lading Address": "提单地址",
+    "Company Profile": "简介",
+    "City": "城市",
+    "Province": "省份",
+    "Country or Region": "国家或地区",
+    "Postal Code": "邮编",
+    "Website": "网址",
+    "Bank & Tax": "财税信息",
+    "Account Name": "账户名",
+    "Bank Name": "开户银行",
+    "Currency": "币种",
+    "Bank Account": "开户银行账号",
+    "Billing Address": "开票地址",
+    "Billing Tel No": "开票电话",
+    "COMPANY ADDRESS": "公司地址",
+    "BANK CODE": "银行代码",
+    "BRANCH CODE": "分行代码",
+    "Swift Code": "Swift Code",
+    "Opening Bank Address": "开户银行地址",
+    "Bank Interbank Number": "银行联行号",
+    "Contract Records": "合同记录",
+    "Contract No.": "合同编号",
+    "Contract Name": "合同名称",
+    "Contract Type": "合约类型",
+    "Effective Form": "生效日期",
+    "Expiring Date": "失效日期",
+    "Contract No.": "合同编号",
+    "Contract name": "合同名称",
+    "Contract Type": "合约类型",
+    "Effective From": "生效日期",
+    "Expiring Date": "失效日期",
+    "Remark": "备注",
+    "Company.": "公司编号",
+    "Short Name": "简称",
+    "Corporate Name": "公司名称",
+    "Company Category": "公司类别",
+    "Address": "地址",
+    "LOGO": "LOGO:",
+    "Operating Status": "经营状态:",
+    "Company type": "公司类型:",
+    "Paid in capital": "实缴资本:",
+    "Business Registration": "工商注册号:",
+    "Industry": "所属行业:",
+    "Legal Representative": "法人代表:",
+    "Registered capital": "注册资本:",
+    "Registration Date": "注册日期:",
+    "Registration Authority": "登记机关:",
+    "Organization Code": "组织机构代码:",
+    "Business scope": "经营范围:",
+    "TAX ID": "税号：",
+    "Corporate Name": "公司名称",
+    "COMPANY TELEPHONE": "公司电话",
+    "COMPANY ADDRESS": "公司地址"
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

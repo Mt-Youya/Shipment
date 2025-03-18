@@ -15,19 +15,14 @@
   }
 }
 
-:global {
-
-  .divider {
+.divider {
+  :global {
     .ant-divider-inner-text {
+      color: #2B2D2E;
       padding-inline: 0;
-    }
-
-    .ant-divider-horizontal.ant-divider-with-text-end::after {
-      width: calc(0.15 * 100%);
     }
   }
 }
-
 
 .detailTabs {
   :global {
@@ -52,6 +47,5 @@
         padding: 10px;
       }
     }
-
   }
 }

@@ -8,12 +8,14 @@ import SideMenu from "./components/side-menu";
 import DynamicIcon from "./components/dynamic-icon";
 import Info from "./components/info";
 import { useTranslation, withTranslation } from "react-i18next";
+import { clsx } from "clsx";
+import styles from "./styles.module.less";
 
 const { Sider, Content } = Layout;
 
 const BasicLayout = () => {
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const {
     token: { colorBgContainer, borderRadiusSM }
@@ -28,14 +30,14 @@ const BasicLayout = () => {
   const menuItems = useMemo(() => {
     return allMenus.map((a) => ({
       ...a,
-      label: t(`menu.${a.key}`) || a.label,
+      label: t(`sideBar.${a.key}`) || a.label,
       children:
         a.children?.length > 0
-          ? a.children.map((b) => ({ ...b, label: t(`menu.${b.key}`) }))
+          ? a.children.map((b) => ({ ...b, label: t(`sideBar.${b.key}`) }))
           : undefined,
       icon: <DynamicIcon iconName={a.icon} isSelected={activePath === a.path} />
     }));
-  }, [activePath, allMenus]);
+  }, [activePath, allMenus, i18n.language]);
 
   const currentKey = useMemo(() => {
     return location.pathname.slice(1).replace("/", "-");
@@ -45,11 +47,15 @@ const BasicLayout = () => {
     getNavigatePath(currentKey);
   }, [currentKey]);
 
+  const logoClassnames = clsx("flex justify-left items-center pt-3 pb-2", styles.logo);
+  const siderClassnames = clsx("bg-white", styles.sider);
+
   return (
     <ConfigProvider
       locale={enUS}
       theme={{
         token: {
+          fontFamily: "SourceHanSansSC",
           colorPrimary: "#566AE5",
           colorTextBase: "#171629",
           borderRadiusLG: 6,
@@ -100,11 +106,11 @@ const BasicLayout = () => {
       }}
     >
       <Layout className="h-full">
-        <Sider trigger={null} width={230} className="bg-white">
+        <Sider trigger={null} className={siderClassnames}>
           <div className="h-full flex flex-col">
-            <div className="flex justify-center items-center pt-3 pb-2">
+            <div className={logoClassnames}>
               <Image width={67} height={50} preview={false} src="/images/login-logo.png" />
-              <span className="text-base font-bold relative right-1">SHUNXINDA</span>
+              <span className="text-base font-bold relative right-1"></span>
             </div>
             <SideMenu items={menuItems} defaultKeys={[activePath.slice(1), currentKey]} />
             <Info />

@@ -3,9 +3,14 @@ import { clsx } from "clsx";
 import { Select } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import styles from "./index.module.less";
+import { useNavigate, useParams } from "react-router-dom";
+import formatDateTime from "@/utils/formatDateTime.js";
+import { useTranslation } from "react-i18next";
 
-function CardItem({ checked = false, className, data }) {
-  const [isChecked, setIsChecked] = useState(checked);
+function CardItem({ className, data }) {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [isChecked, setIsChecked] = useState(+id === +data?.id);
 
   const classnames = clsx(
     "bg-[#566AE50D] cursor-pointer flex flex-col my-2 gap-1 px-4 py-3 border-black border border-solid hover:border-indigo-600 rounded-md transition-colors",
@@ -14,20 +19,23 @@ function CardItem({ checked = false, className, data }) {
     className
   );
 
+  function handleClick() {
+    setIsChecked(!isChecked);
+    navigate(`/billing/detail/${data.id}`);
+  }
+
   return (
-    <li className={classnames} onClick={() => setIsChecked(!isChecked)}>
+    <li className={classnames} onClick={handleClick}>
       <div className="flex justify-between">
-        <div className="flex gap-1 justify-start" onClick={() => setIsChecked(!isChecked)}>
-          {data?.hbl_no}
-        </div>
+        <div className="flex gap-1 justify-start">{data?.hbl_no}</div>
         <span className="text-primary">{["未支付", "已支付"][data?.status]} </span>
       </div>
-      <div className="grid grid-cols-3 gap-1" style={{ gridTemplateColumns: "1fr 70px" }}>
+      <div className="flex justify-between gap-1">
         <div className="flex justify-start items-center gap-1">
           <img src="/images/icons/Calender.svg" alt="Calender" />
-          <span>{data?.due}</span>
+          <span>{formatDateTime(data?.due)}</span>
         </div>
-        <div className="flex justify-start items-center gap-1">
+        <div className="flex justify-start items-center gap-0.5">
           <img src="/images/icons/Cash.svg" alt="Cash" />
           <span>${data?.remain_amount}</span>
         </div>
@@ -37,6 +45,7 @@ function CardItem({ checked = false, className, data }) {
 }
 
 function CheckCard({ dataSource = [] }) {
+  const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
   const [value, setValue] = useState(null);
 
@@ -57,14 +66,14 @@ function CheckCard({ dataSource = [] }) {
   }, [current, dataSource, value]);
 
   const selectOptions = [
-    { label: "未支付", value: 0 },
-    { label: "已支付", value: 1 }
+    { label: t("common.unpaid"), value: 0 },
+    { label: t("common.paid"), value: 1 }
   ];
 
   return (
     <>
       <div className={`flex gap-1 ${styles.divider}`}>
-        <h1 className="m-0">Status</h1>
+        <h1 className="m-0">{t("billing.status")}</h1>
         <Select
           options={selectOptions}
           placeholder="Please select"

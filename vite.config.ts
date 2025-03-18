@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
       compression({ threshold: 20480, skipIfLargerOrEqual: true })
       // visualizer({ open: false })
     ],
+    assetsInclude: ['**/*.woff2'],
     esbuild: {
       pure: ["console.log"],
       drop: ["debugger"]

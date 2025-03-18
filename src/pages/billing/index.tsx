@@ -4,20 +4,23 @@ import { useRef, useState } from "react";
 import { getBillings } from "../../service/billings";
 import { useNavigate } from "react-router-dom";
 import { BillingStore } from "../../store/billings.ts";
+import { useTranslation } from "react-i18next";
 import styles from "./index.module.less";
 import DrawerUpload from "../../components/DrawerUpload";
+import formatDateTime from "../../utils/formatDateTime.ts";
 
 function Billing() {
+  const { t } = useTranslation();
   const actionRef = useRef<ActionType>(null);
   const formRef = useRef<FormInstance>();
 
   const navigate = useNavigate();
 
   const columns: ProColumns[] = [
-    { title: "Keywords", dataIndex: "name", hideInTable: true },
-    { title: "Invoice#", dataIndex: "invoice", hideInSearch: true },
+    { title: t("billing.keywords"), dataIndex: "name", hideInTable: true },
+    { title: t("billing.invoice#"), dataIndex: "invoice", hideInSearch: true },
     {
-      title: "HBL",
+      title: t("billing.hbl"),
       dataIndex: "hbl_no",
       hideInSearch: true,
       render: (item, record) => (
@@ -26,32 +29,37 @@ function Billing() {
         </a>
       )
     },
-    { title: "Issued", dataIndex: "issued", hideInSearch: true },
-    { title: "Due", dataIndex: "due", hideInSearch: true },
-    { title: "Last Payment", dataIndex: "last_payment", hideInSearch: true },
+    { title: t("billing.issued"), dataIndex: "issued", hideInSearch: true },
     {
-      title: "Status",
+      title: t("billing.due"),
+      dataIndex: "due",
+      hideInSearch: true,
+      render: (item) => formatDateTime(item)
+    },
+    { title: t("billing.last Payment"), dataIndex: "last_payment", hideInSearch: true },
+    {
+      title: t("billing.status"),
       dataIndex: "status",
       valueType: "select",
       valueEnum: {
-        0: { text: "未支付", status: "Warning" },
-        1: { text: "已支付", status: "Success" }
+        0: { text: t("common.unpaid"), status: "Warning" },
+        1: { text: t("common.paid"), status: "Success" }
       }
     },
     {
-      title: "Invoice Type",
+      title: t("billing.invoice Type"),
       dataIndex: "invoice_type",
       valueType: "select",
       valueEnum: {
-        null: "空",
-        0: "发票",
-        1: "DEBIT NOTE"
+        null: t("selections.null"),
+        1: t("selections.bill"),
+        2: t("selections.debit note")
       }
     },
-    { title: "Amount", dataIndex: "amount", hideInSearch: true },
-    { title: "Balance", dataIndex: "balance", hideInSearch: true },
+    { title: t("billing.amount"), dataIndex: "amount", hideInSearch: true },
+    { title: t("billing.balance"), dataIndex: "balance", hideInSearch: true },
     {
-      title: "Action",
+      title: t("billing.action"),
       dataIndex: "shipper",
       hideInSearch: true,
       render: (_, record) => (
@@ -88,20 +96,16 @@ function Billing() {
   const { setBillingData } = BillingStore();
 
   const [open, setOpen] = useState(false);
-  const [uploadOptions, setUploadOptions] = useState({ title: "文件上传", type: "3", id: "" });
+  const [uploadOptions, setUploadOptions] = useState({
+    title: t("common.upload files"),
+    type: "3",
+    id: ""
+  });
 
   return (
     <>
       <section className="py-2">
-        <div className="flex justify-between">
-          <h1 className="title leading-7xl m-0">Billing</h1>
-          <button
-            className="bg-primary text-white text-base font-bold px-2 py-1.5 border-none rounded-md cursor-pointer"
-            onClick={() => navigate("/booking/detail")}
-          >
-            NEW BOOKING
-          </button>
-        </div>
+        <h1 className="title leading-7xl m-0">{t("billing.billing")}</h1>
         <Divider className="my-1" />
         <ProTable
           bordered
@@ -135,27 +139,27 @@ function Billing() {
             labelWidth: "auto",
             collapsed: false,
             collapseRender: false,
-            searchText: "Search",
-            resetText: "Clear Filters",
+            searchText: t("common.search"),
+            resetText: t("common.clear"),
             className: styles.searchBar
           }}
           dateFormatter="string"
           pagination={{
             pageSize: 10,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} data`
+            showTotal: (total) => `${t("common.total")} ${total} ${t("common.entries")}`
           }}
           rowKey="id"
           toolBarRender={() => [
             <Button key="Payment" onClick={handleBatchPayment}>
-              Batch Payment
+              {t("billing.batch Payment")}
             </Button>
           ]}
         />
       </section>
 
       <DrawerUpload
-        drawerProps={{ title: "文件上传" }}
+        drawerProps={{ title: t("common.upload files") }}
         open={open}
         setOpen={setOpen}
         onFinish={actionRef.current?.reload}

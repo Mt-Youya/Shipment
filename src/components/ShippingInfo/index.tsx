@@ -4,6 +4,7 @@ import { ArrowRightOutlined, FileTextOutlined } from "@ant-design/icons";
 import formatDateTime from "../../utils/formatDateTime.ts";
 
 import type { ActionTime, IShipmentMap } from "../../service/shipments/shipment.type.ts";
+import { useTranslation } from "react-i18next";
 
 type TPlaces = IShipmentMap["places"];
 interface IOption {
@@ -19,44 +20,45 @@ interface IProps {
 
 function ShippingInfo({ data, optionName }: IProps) {
   const { carrier, vessel, tracking, container_info } = data ?? {};
+  const { t } = useTranslation();
 
   const departOptions: IOption[] = [
-    { label: "CRD", value: container_info?.[0]?.crd?.time_value },
+    { label: t("shipment.crd"), value: container_info?.[0]?.crd?.time_value },
     {
-      label: "Departed",
+      label: t("shipment.departed"),
       value: container_info?.[0]?.depart?.find(({ is_newest }) => is_newest === 1)?.time_value,
       children: container_info?.[0]?.depart
     },
     {
-      label: "Arrived",
+      label: t("shipment.arrived"),
       value: container_info?.[0]?.arrive?.find(({ is_newest }) => is_newest === 1)?.time_value,
       children: container_info?.[0]?.arrive
     }
   ];
 
   const portCommon: IOption[] = [
-    { label: "Vessel", value: vessel },
-    { label: "Carrier", value: carrier }
+    { label: t("shipment.vessel"), value: vessel },
+    { label: t("shipment.carrier"), value: carrier }
   ];
 
   const portOptions = [
     {
-      label: "Est. Departure",
+      label: t("shipment.Est. Departure"),
       value: data?.depart?.find(({ is_newest }) => is_newest === 1)?.time_value,
       children: data?.depart
     },
     {
-      label: "Est. Arrival",
+      label: t("shipment.Est. Arrival"),
       value: data?.arrive?.find(({ is_newest }) => is_newest === 1)?.time_value,
       children: data?.arrive
     },
     ...portCommon,
-    { label: "Tracking", value: tracking }
+    { label: t("shipment.tracking"), value: tracking }
   ];
 
   const podOptions: IOption[] = [
     {
-      label: "Departed",
+      label: t("shipment.departed"),
       value: container_info?.[0]?.depart?.find(({ is_newest }) => is_newest === 1)?.time_value,
       children: container_info?.[0]?.depart
     },
@@ -86,7 +88,7 @@ function ShippingInfo({ data, optionName }: IProps) {
             </div>
             <br />
             <TransferList options={optionName === "depart" ? departOptions : podOptions} />
-            {idx <= container_info?.length - 1 && <Divider className="my-1" />}
+            {idx < container_info?.length - 1 && <Divider className="my-1" />}
           </Fragment>
         ))}
 

@@ -1,4 +1,3 @@
-// 定义每个节点数据的结构
 import React, { useMemo } from "react";
 
 interface NodeItem {
@@ -21,7 +20,7 @@ function FourNodeSlider({ items }: IProps) {
   const mainIndex = useMemo(() => items.findIndex((item) => item.isMain), [items]);
 
   return (
-    <div className="max-w-[1000px] min-w-45">
+    <div className="max-w-[1000px] min-w-30">
       <div className="relative flex flex-col border border-gray-200 mb-1 rounded-b-1">
         <div className="absolute w-1 h-full bg-[#D9D9D9] left-0.5 z-10 rounded-lg" />
         {list.map(({ showBar = true, ...item }, idx) => (
@@ -63,7 +62,9 @@ function FourNodeSlider({ items }: IProps) {
       </div>
       <div className="relative flex-col flex items-start left-0.5 z-20 pl-2 -mt-2">
         <div>
-          {lastItem.description && <div className="mb-1 font-bold text-base">{lastItem.description}</div>}
+          {lastItem.description && (
+            <div className="mb-1 font-bold text-base">{lastItem.description}</div>
+          )}
           <div className={`flex-1 mb-1 text-xs`}>{lastItem.content}</div>
         </div>
       </div>

@@ -1,7 +1,6 @@
 /* WeeklySchedule.module.css */
 .container {
   margin: 0 auto;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .header {
@@ -111,7 +110,6 @@
 }
 
 .orderNumber {
-  font-family: 'Courier New', monospace;
   font-size: 13px;
   color: #0366d6;
   line-height: 1.5;
@@ -133,7 +131,6 @@
 }
 
 .containerNumber {
-  font-family: 'Courier New', monospace;
   font-size: 12px;
   color: #22863a;
   background: #f0fff4;

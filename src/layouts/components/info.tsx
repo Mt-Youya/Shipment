@@ -1,9 +1,12 @@
-import { Image } from "antd";
-import DynamicIcon from "./dynamic-icon";
+import { Image, Modal } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Local, Session } from "../../utils/storage.ts";
+import DynamicIcon from "./dynamic-icon";
 import useCurrentUserStore from "../../store/current-user.ts";
+import {LangStore} from "../../store/lang.ts";
+
+const { confirm } = Modal;
 
 const Info = () => {
   const { t, i18n } = useTranslation();
@@ -16,9 +19,32 @@ const Info = () => {
     navigate("/login");
   };
 
+  const showPropsConfirm = () => {
+    confirm({
+      icon: <></>,
+      width: 480,
+      height: 182,
+      title: "Confirm exit",
+      content: (
+        <span style={{ fontSize: "14px", lineHeight: "22px", color: "#666666" }}>
+          Some Are you sure you want to log out of this account?
+        </span>
+      ),
+      okText: "confirm",
+      okType: "primary",
+      cancelText: "Cancel",
+      onOk() {
+        onLogout();
+      }
+    });
+  };
+
+  const { setLang } = LangStore()
   const onChangeLang = () => {
     const isEn = i18n.language === "en";
-    i18n.changeLanguage(isEn ? "zh-CN" : "en");
+    const lang = isEn ? "zh-CN" : "en";
+    i18n.changeLanguage(lang);
+    setLang(lang)
   };
 
   const { user } = useCurrentUserStore();
@@ -31,37 +57,26 @@ const Info = () => {
       >
         <div className="flex items-center justify-start">
           <DynamicIcon iconName="translation" isSelected={false} />
-          <span className="ml-1 text-base font-medium">{t("info-bar.lang")}</span>
+          <span className="ml-1 text-base font-medium">{t("sideBar.lang")}</span>
         </div>
         <DynamicIcon iconName="exchange" isSelected={false} size={16} margin="0" />
       </div>
       <div className="flex items-center justify-between py-1.5 px-1 cursor-pointer hover:bg-graye6 hover:bg-opacity-50">
         <div className="flex items-center">
           <DynamicIcon iconName="notice" isSelected={false} />
-          <span className="ml-1 text-base font-medium">{t("info-bar.message")}</span>
+          <span className="ml-1 text-base font-medium">{t("sideBar.message")}</span>
         </div>
-        <span
-          style={{
-            background: "#FF515E",
-            color: "#fff",
-            width: "16px",
-            height: "16px",
-            lineHeight: "16px",
-            textAlign: "center",
-            borderRadius: "50%",
-            fontSize: "10px"
-          }}
-        >
+        <span className="bg-[#FF515E] text-white text-center rounded-full text-xs w-2.5 h-2.5 leading-2xl">
           9
         </span>
       </div>
       <div
         className="flex items-center justify-between py-1.5 px-1 cursor-pointer hover:bg-graye6 hover:bg-opacity-50"
-        onClick={onLogout}
+        onClick={showPropsConfirm}
       >
         <div className="flex items-center">
-          <Image src="/images/avatar.png" width={26} height={26} preview={false} />
-          <span className="ml-1 text-base font-medium">{user?.username}</span>
+          <Image src="/images/avatar.png" width={20} height={20} preview={false} />
+          <span className="ml-1.5 text-base font-medium">{user?.username}</span>
         </div>
         <DynamicIcon iconName="logout" isSelected={false} size={16} margin="0" />
       </div>

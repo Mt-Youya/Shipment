@@ -120,7 +120,7 @@ function useSliderDescription(data, optionName) {
   return {
     description: (
       <div>
-        <h3 className="mb-1 mt-0">{data?.name}</h3>
+        <h3 className="mb-1 mt-0 font-medium text-base">{data?.name}</h3>
         <p className="text-[#A3A3A3]">{data?.address}</p>
       </div>
     ),

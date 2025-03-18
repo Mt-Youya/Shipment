@@ -145,6 +145,7 @@ const shipment = () => {
         </Button>
       </div>
       <ProTable
+        bordered
         actionRef={dataTable}
         formRef={dataForm}
         columns={columns}

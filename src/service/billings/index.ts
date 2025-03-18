@@ -1,5 +1,6 @@
 import http from "../../utils/axios";
-import { IBilling, IBillingDetail } from "./billing.type.ts";
+
+import type { IBilling, IBillingDetail } from "./billing.type.ts";
 
 export const getBillings = (data: IBilling) => http.post({ data, url: `/web/charge` });
 

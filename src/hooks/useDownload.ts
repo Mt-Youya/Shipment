@@ -1,6 +1,4 @@
-export function getFileName(url) {
-  return url.substring(url.lastIndexOf("/") + 1);
-}
+import { getFileName } from "../utils/getFileInfo.ts";
 
 export function useDownload(filePath: string, fileName) {
   const xhr = new XMLHttpRequest();

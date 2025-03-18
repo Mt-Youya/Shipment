@@ -1,14 +1,14 @@
+import "antd/dist/reset.css";
+import "./main.css";
 import React, { ComponentType, lazy, useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import "./main.css";
 import Login from "./pages/login";
 import NoPermission from "./pages/no-permission";
 import NotFoundPage from "./pages/not-found";
 import BasicLayout from "./layouts/basic-layout";
 import Auth from "./components/auth";
 import PrivateRoute from "./pages/PrivateRoute.jsx";
-
 import useRouteStore from "./store/route";
 import { getOSSClient, OssStore } from "./store/oss.js";
 import { IRouteItem } from "./config/route.type";

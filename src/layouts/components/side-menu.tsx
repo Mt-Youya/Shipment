@@ -2,6 +2,7 @@ import React from "react";
 import { ConfigProvider, GetProp, Menu, MenuProps } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRouteStore } from "../../store";
+import styles from "../styles.module.less";
 
 type MenuItem = GetProp<MenuProps, "items">[number];
 
@@ -28,7 +29,8 @@ const SideMenu: React.FC<{
             groupTitleFontSize: 16,
             itemSelectedColor: "#566AE5",
             itemSelectedBg: "rgba(86, 106, 229, 0.1)",
-            subMenuItemBg: "transparent"
+            subMenuItemBg: "transparent",
+            fontFamily: "SourceHanSansSC"
           }
         }
       }}
@@ -36,6 +38,7 @@ const SideMenu: React.FC<{
       <div className="no-scrollbar flex-1 overflow-y-auto">
         <Menu
           mode="inline"
+          className={styles.menu}
           defaultOpenKeys={defaultKeys}
           defaultSelectedKeys={defaultKeys}
           items={items}

@@ -1,18 +1,21 @@
 import { Table } from "antd";
 import { useDownload } from "@/hooks/useDownload.js";
 import DetailOrder from "./detail-order";
+import formatDateTime from "@/utils/formatDateTime.js";
+import { useTranslation } from "react-i18next";
 
 function DetailBill({ dataSource, ...props }) {
+  const { t } = useTranslation();
   const columns = [
-    { title: "Invoice#", dataIndex: "invoice_no" },
-    { title: "Issued", dataIndex: "issue" },
-    { title: "Due", dataIndex: "due" },
-    { title: "Last Payment", dataIndex: "last_payment" },
-    { title: "Status", dataIndex: "status" },
-    { title: "Amount", dataIndex: "amount" },
-    { title: "Balance", dataIndex: "balance" },
+    { title: t("shipment.invoice#"), dataIndex: "invoice_no" },
+    { title: t("shipment.issued"), dataIndex: "issue", render: (due) => formatDateTime(due) },
+    { title: t("shipment.due"), dataIndex: "due" },
+    { title: t("shipment.last Payment"), dataIndex: "last_payment" },
+    { title: t("shipment.status"), dataIndex: "status" },
+    { title: t("shipment.amount"), dataIndex: "amount" },
+    { title: t("shipment.balance"), dataIndex: "balance" },
     {
-      title: "Action",
+      title: t("shipment.action"),
       dataIndex: "file_url",
       render: (url) => (
         <img

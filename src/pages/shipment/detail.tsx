@@ -12,10 +12,11 @@ import DetailBill from "./detail-bill.jsx";
 import DrawerUpload from "../../components/DrawerUpload";
 import randomUUID from "../../utils/randomUUID.ts";
 import styles from "./index.module.less";
-import "./style.css"
+import "./style.css";
 
 import type { AwaitedReturn } from "../../utils/common.type.ts";
 import formatDateTime from "../../utils/formatDateTime.ts";
+import { useTranslation } from "react-i18next";
 
 function ShipmentDetails() {
   const { id } = useParams();
@@ -39,11 +40,14 @@ function ShipmentDetails() {
     getShipmentMap(id).then((res) => setMapData(res));
   }, []);
 
+  const { t } = useTranslation();
+
+  const [orderId, setOrderId] = useState("");
   const taskColumns = [
     { title: "", key: "index", render: (_, __, index) => index + 1 },
-    { title: "Task", dataIndex: "title", key: "task" },
+    { title: t("shipment.task"), dataIndex: "title", key: "task" },
     {
-      title: "Status",
+      title: t("shipment.status"),
       dataIndex: "created_at",
       key: "created_at",
       render: (_, item) => (
@@ -55,16 +59,22 @@ function ShipmentDetails() {
       )
     },
     {
-      title: "Deadline",
+      title: t("shipment.due"),
       dataIndex: "deadline",
       key: "deadline",
       render: (item) => formatDateTime(item)
     },
     {
-      title: "Operate",
+      title: t("shipment.action"),
       key: "operate",
-      render: () => (
-        <a className="text-blue font-bold" onClick={() => setOpen(true)}>
+      render: (_, record) => (
+        <a
+          className="text-blue font-bold"
+          onClick={() => {
+            setOpen(true);
+            setOrderId(record.id);
+          }}
+        >
           Upload
         </a>
       )
@@ -74,7 +84,7 @@ function ShipmentDetails() {
   const taskItems = [
     {
       key: "Pending",
-      label: `Pending Tasks ${state?.task_list?.incomplete?.count}`,
+      label: `${t("shipment.pending Tasks")} ${state?.task_list?.incomplete?.count}`,
       children: (
         <Table
           bordered
@@ -88,7 +98,7 @@ function ShipmentDetails() {
     },
     {
       key: "Completed",
-      label: "Completed Tasks",
+      label: t("shipment.completed Tasks"),
       children: (
         <Table
           bordered
@@ -114,7 +124,7 @@ function ShipmentDetails() {
   const orderItems = [
     {
       key: "details",
-      label: `Details`,
+      label: t("shipment.details"),
       children: (
         <DetailOwn
           service={serviceData}
@@ -125,18 +135,18 @@ function ShipmentDetails() {
     },
     {
       key: "documents",
-      label: `Documents`,
+      label: t("shipment.documents"),
       children: <DetailDocuments />
     },
     {
       key: "estimatedCost",
-      label: `Estimated cost`,
+      label: t("shipment.estimated cost"),
       children: <DetailCost dataSource={state?.cost} />
     },
     {
       key: "bill",
-      label: `Bill`,
-      children: <DetailBill dataSource={state?.detail?.invoice} />
+      label: t("shipment.bill"),
+      children: <DetailBill dataSource={state?.invoice} />
     }
   ];
 
@@ -149,12 +159,8 @@ function ShipmentDetails() {
 
   const [open, setOpen] = useState(false);
 
-  function handleFinish(res) {
-    console.log("finish", res);
-  }
-
   return (
-    <section className="mr-2">
+    <section>
       <div>
         <div>
           <div className="flex justify-between py-1.5">
@@ -179,10 +185,7 @@ function ShipmentDetails() {
               <img src="/images/icons/Address.svg" alt="address" />
               &nbsp;{state?.shipment_type}&nbsp;
             </span>
-            |
-            <span>
-              &nbsp; {state?.container}&nbsp; {"Mediterranean Shipping Campany"}
-            </span>
+            |<span>&nbsp; {state?.container}&nbsp;</span>|<span>&nbsp; {state?.carrier}&nbsp;</span>
           </p>
         </div>
         <Divider orientation="right" className={styles.divider}>
@@ -195,7 +198,7 @@ function ShipmentDetails() {
           )}
         </Divider>
         <div className="flex justify-between">
-          <div className={`min-w-[1000px] w-full ${styles.detailTabs}`}>
+          <div className={`min-w-60 w-full ${styles.detailTabs}`}>
             <Tabs items={taskItems} type="card" />
             <br />
             <Tabs items={orderItems} onChange={(e) => setTabKey(e)} />
@@ -210,10 +213,10 @@ function ShipmentDetails() {
         showHistory
         open={open}
         setOpen={setOpen}
-        onFinish={handleFinish}
+        onFinish={location.reload}
         uploadProps={{ accept: ".pdf,.png" }}
         drawerProps={{ title: "Upload files" }}
-        uploadOptions={{ title: "Upload files", type: 4, id }}
+        uploadOptions={{ title: "Upload files", type: 4, id: orderId }}
         acceptText={<p className="text-[#00000066]">Supported extensions: .pdf .png</p>}
       />
     </section>

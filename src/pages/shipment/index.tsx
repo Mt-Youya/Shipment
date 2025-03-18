@@ -7,6 +7,7 @@ import { getDropdown } from "../../service/common.ts";
 import { ShipmentsStore } from "../../store/shipments.ts";
 import styles from "./index.module.less";
 import StepCard from "../../components/StepCard";
+import { useTranslation } from "react-i18next";
 
 function ShipmentTab({ type }: { type?: number }) {
   const navigate = useNavigate();
@@ -40,15 +41,16 @@ function ShipmentTab({ type }: { type?: number }) {
 }
 
 function Shipment() {
+  const { t } = useTranslation();
   const tabItems = [
     {
       key: "All",
-      label: "All shipment in processs",
+      label: t("shipment.all shipment in processs"),
       children: <ShipmentTab />
     },
     {
       key: "next week",
-      label: "Delivered within next week",
+      label: t("shipment.delivered within next week"),
       children: <ShipmentTab type={1} />
     }
   ];

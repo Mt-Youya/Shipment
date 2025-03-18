@@ -53,6 +53,7 @@
   .RT_itemone{
     font-size: 14px;
     font-weight: 500;
+    margin-bottom: 5px;
   }
    .RT_itemtwo{
     font-size: 12px;
@@ -64,4 +65,18 @@
     display: inline-block ;
     border-radius: 5px;
   }
+}
+.badge{
+  display: inline-block;
+  width: 38px;
+  height: 24px;
+  line-height: 20px;
+  text-align: center;
+  margin-left: 10px;
+  background-color:#FBA045 ;
+  font-weight: 400;
+  color: white;
+  padding: 2px 8px;
+  font-size: 12px;
+  border-radius: 20px;
 }

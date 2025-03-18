@@ -43,6 +43,9 @@ export default () => {
       title: "Contract Type",
       dataIndex: "contract_type",
       valueType: "select",
+      renderText: (item) => {
+        return drop.contract_type[item] || "";
+      },
       renderFormItem: (item, { defaultRender, ...rest }) => {
         return (
           <Select

@@ -1,26 +1,19 @@
-import { Popover, Steps } from "antd";
+import { Steps, Tooltip } from "antd";
+import { useTranslation } from "react-i18next";
 import { FileTextOutlined } from "@ant-design/icons";
 import { getShipments } from "../../service/shipments";
+import { LangStore } from "../../store/lang.ts";
 import styles from "./styles.module.less";
 
 import type { AwaitedReturn } from "../../utils/common.type.ts";
 
-function CustomDot(dot, { index, title, description }) {
-  if (index === 2) {
-    return (
-      <Popover
-        content={
-          <span>
-            {title}
-            {description}
-          </span>
-        }
-      >
-        {dot}
-      </Popover>
-    );
-  }
-  return <>{dot} </>;
+function overTextPopper(text: string) {
+  const p = document.createElement("p");
+  p.innerText = text;
+  document.body.appendChild(p);
+  const width = +getComputedStyle(p).width.split("px")[0];
+  p.parentNode?.removeChild(p);
+  return width;
 }
 
 interface IStepCardProps {
@@ -30,15 +23,22 @@ interface IStepCardProps {
 }
 
 function StepCard({ onClick, data }: IStepCardProps) {
-  const stepsCurrent = [0.5, 1, 1, 1.5, 2, 3, 4, 5][data?.status || 0];
+  const stepsCurrent = [0.5, 1, 1, 1.5, 2, 3, 4, 5][data?.status - 1 || 0];
+
+  const { t } = useTranslation();
+  const { lang } = LangStore();
 
   const stepItems = [
     {
       title: data?.departure_location,
       description: (
         <>
-          <p>CRD:</p>
-          <p>{data?.crd}</p>
+          {data?.crd && (
+            <>
+              <p>{t("shipment.crd")}:</p>
+              <p>{data?.crd}</p>
+            </>
+          )}
           <span>{data?.pick_up_date}</span>
         </>
       )
@@ -51,11 +51,17 @@ function StepCard({ onClick, data }: IStepCardProps) {
       ),
       description: (
         <>
-          <p>{[false, true, true][stepsCurrent] ? "Est. Arrival" : "Arrived"}: </p>
+          <p className="min-h-2">
+            {data?.departure_arrive &&
+              ([false, true, true][stepsCurrent]
+                ? t("shipment.Est. Arrival")
+                : t("shipment.arrived")) + ":"}
+          </p>
+
           <span>{data?.departure_arrive}</span>
           {data?.departure_date && (
             <>
-              <p>Est. Departure: </p>
+              <p>{t("shipment.Est. Departure")}: </p>
               <span>{data?.departure_date}</span>
             </>
           )}
@@ -67,14 +73,14 @@ function StepCard({ onClick, data }: IStepCardProps) {
         <span
           className={`${[false, false, false, false, false, true][stepsCurrent] && "text-blue"}`}
         >
-          The boat is sailing
+          {t("shipment.The boat is sailing")}
         </span>
       ),
       description: (
         <>
-          <p>Departed</p>
+          {data?.sail_departure && <p>{t("shipment.departed")}:</p>}
           <span>{data?.sail_departure}</span>
-          <p>Est. Arrival: </p>
+          {data?.sail_arrive && <p>{t("shipment.Est. Arrival")}: </p>}
           <span>{data?.sail_arrive}</span>
         </>
       )
@@ -89,7 +95,7 @@ function StepCard({ onClick, data }: IStepCardProps) {
       ),
       description: (
         <>
-          <p>Est. Pickup:</p>
+          {data?.arrival_pickup && <p>{t("shipment.Est. Pickup")}:</p>}
           <span>{data?.arrival_pickup}</span>
         </>
       )
@@ -102,27 +108,38 @@ function StepCard({ onClick, data }: IStepCardProps) {
           {data?.consignee}
         </span>
       ),
-      description: (
-        <>
-          {data?.delivery_arrive && (
-            <>
-              <p>Est. Delivery:</p>
-              <p>{data?.delivery_arrive}</p>
-            </>
-          )}
-        </>
-      )
+      description:
+        data?.delivery_arrive &&
+        (overTextPopper(data?.delivery_arrive) > 140 ? (
+          <Tooltip
+            title={
+              <>
+                {t("shipment.Est.Delivery")}: {data?.delivery_arrive}
+              </>
+            }
+          >
+            <p>{t("shipment.Est.Delivery")}:</p>
+            <p className="max-w-[150px]  overflow-hidden text-ellipsis whitespace-nowrap">
+              {data?.delivery_arrive}
+            </p>
+          </Tooltip>
+        ) : (
+          <>
+            {data?.delivery_arrive && <p>{t("shipment.Est.Delivery")}:</p>}
+            <p>{data?.delivery_arrive}</p>
+          </>
+        ))
     }
   ];
 
   return (
     <div
-      className="flex min-h-16 cursor-pointer hover:bg-[#eff5ff85] transition-colors py-1 px-2 gap-1"
+      className="flex min-h-16 cursor-pointer hover:bg-[#eff5ff85] transition-colors py-1 px-2 gap-4"
       style={{ borderTop: "1px solid #f1f1f1" }}
       onClick={onClick}
     >
-      <div className="flex-4 max-w-[800px] items-start flex justify-between flex-col">
-        <h2 className="h-5 my-0 text-lg">{data?.title}</h2>
+      <div className="flex-4 max-w-[800px] items-start flex justify-start gap-2 flex-col">
+        <h2 className="my-0 text-lg">{data?.title}</h2>
         <ul className="list-none m-0 p-0 flex flex-col gap-1 *:flex">
           <li>
             <FileTextOutlined /> &nbsp; {data?.order_no}
@@ -145,8 +162,10 @@ function StepCard({ onClick, data }: IStepCardProps) {
           )}
           <li>
             <img src="/images/icons/Container.svg" alt="Container" />
-            &nbsp;{data?.task_count}task{data?.task_count > 1 ? "s" : ""} | {data?.container}
-            container
+            &nbsp;{data?.task_count} {t("shipment.task")}
+            {lang === "en" && data?.task_count > 1 ? "s" : ""} | {data?.container}{" "}
+            {t("shipment.container")}
+            {lang === "en" && data?.container > 1 ? "s" : ""}
           </li>
         </ul>
       </div>
@@ -155,7 +174,7 @@ function StepCard({ onClick, data }: IStepCardProps) {
         <Steps
           current={stepsCurrent}
           items={stepItems}
-          progressDot={CustomDot}
+          progressDot={(dot) => <>{dot} </>}
           className={styles.stepsCard}
         />
       </div>

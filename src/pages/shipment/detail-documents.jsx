@@ -10,6 +10,8 @@ import dayjs from "dayjs";
 import DetailOrder from "./detail-order";
 import { ShipmentsStore } from "@/store/shipments.js";
 import { ProTable } from "@ant-design/pro-components";
+import formatDateTime from "@/utils/formatDateTime.js";
+import { useTranslation } from "react-i18next";
 
 function DetailDocuments() {
   const [form] = Form.useForm();
@@ -68,25 +70,28 @@ function DetailDocuments() {
     { max: 1024 * 1024 * 5 }
   );
 
+  const { t } = useTranslation();
+
   const columns = [
-    { key: "filename", dataIndex: "file_name", title: "File Name" },
+    { key: "filename", dataIndex: "file_name", title: t("shipment.file Name") },
     {
       key: "upload_time",
       dataIndex: "upload_time",
-      title: "Upload Date",
-      valueType: "date"
+      title: t("shipment.upload Date"),
+      valueType: "date",
+      render: (due) => formatDateTime(due)
     },
     {
       key: "upload_user_name",
       dataIndex: "upload_user_name",
-      title: "Uploader",
+      title: t("shipment.uploader"),
       valueType: "select",
       valueEnum: dropdownOptions?.upload_user[0]
     },
     {
       key: "action",
       dataIndex: "action",
-      title: "Action",
+      title: t("shipment.action"),
       hideInSearch: true,
       hideInForm: false,
       render: (_, record) => (
@@ -106,17 +111,17 @@ function DetailDocuments() {
   return (
     <>
       <Form form={form} className="my-2" layout="inline" onValuesChange={handleValuesChange}>
-        <Form.Item name="file_name" label="File Name">
+        <Form.Item name="file_name" label={t("shipment.file Name")}>
           <Input placeholder="Please enter" />
         </Form.Item>
-        <Form.Item name="upload_date" label="Upload Date">
+        <Form.Item name="upload_date" label={t("shipment.upload Date")}>
           <DatePicker placeholder="Please select date" />
         </Form.Item>
-        <Form.Item name="user_id" label="Uploader">
+        <Form.Item name="user_id" label={t("shipment.uploader")}>
           <Select options={options} placeholder="Please select" />
         </Form.Item>
         <Button type="primary" className="cursor-pointer" onClick={() => input.click()}>
-          Upload file
+          {t("shipment.upload file")}
         </Button>
       </Form>
 
@@ -130,7 +135,7 @@ function DetailDocuments() {
           showSizeChanger: true,
           showQuickJumper: true,
           onChange: onPageChange,
-          showTotal: (total) => `Total ${total} Entries`
+          showTotal: (total) => `${t("common.total")} ${total} ${t("common.entries")}`
         }}
         columns={columns}
         rowSelection={{

@@ -1,69 +1,37 @@
 import { useMemo } from "react";
-import { Divider, Table, Tabs } from "antd";
-import VerticalSlider from "@/components/VerticalSlider/index.js";
-import RateInformations from "@/components/RateInformations/index.js";
+import { Divider, Table } from "antd";
+import { useTranslation } from "react-i18next";
+import VerticalSlider from "@/components/VerticalSlider";
+import RateInformation from "@/components/RateInformations";
 import randomUUID from "@/utils/randomUUID.js";
 
-function PrimaryTable(props) {
-  const subtotal = useMemo(
-    () => props.dataSource.reduce((preValue, item) => item.price ?? 0 + preValue, 0),
-    [props.dataSource]
-  );
-
-  return (
-    <Table
-      bordered
-      rowKey="id"
-      className="mt-1 mx-1"
-      pagination={false}
-      footer={() => (
-        <ul className="list-none my-0 p-0 grid grid-cols-3 w-full text-center">
-          <li>Subtotal</li>
-          <li>USD</li>
-          <li>{subtotal.toFixed(2)}</li>
-        </ul>
-      )}
-      loading={!props.dataSource}
-      {...props}
-    />
-  );
-}
-
 function DetailCost({ dataSource }) {
+  const { t } = useTranslation();
   const costColumns = [
-    { key: "quote_no", dataIndex: "quote_no", title: "Quoto" },
-    { key: "carrier", dataIndex: "carrier", title: "Carrier" },
+    { key: "quote_no", dataIndex: "quote_no", title: t("shipment.quote") },
+    { key: "carrier", dataIndex: "carrier", title: t("shipment.carrier") },
     {
       key: "carrier_advertised",
       dataIndex: "carrier_advertised",
-      title: "Carrier-advertised"
+      title: t("shipment.carrier-advertised")
     },
-    { key: "total_amount", dataIndex: "total_amount", title: "Total" },
-    { key: "expires", dataIndex: "expires", title: "Expires" },
-    { key: "action", dataIndex: "action", title: "Action" }
+    { key: "total_amount", dataIndex: "total_amount", title: t("shipment.total") },
+    { key: "expires", dataIndex: "expires", title: t("shipment.expires") },
+    { key: "action", dataIndex: "action", title: t("shipment.action") }
   ];
 
   const transitColumns = [
-    { key: "mode", dataIndex: "mode_name", title: "MODE" },
+    { key: "mode", dataIndex: "mode_name", title: t("shipment.mode") },
     {
       key: "carrier_advertised",
       dataIndex: "carrier_advertised",
-      title: "CARRIER-ADVERTISED"
+      title: t("shipment.CARRIER-ADVERTISED")
     },
-    { key: "carrier_name", dataIndex: "carrier_name", title: "CARRIER" },
-    { key: "freight_service", dataIndex: "freight_service", title: "FREIGHT SERVICE" },
-    { key: "closing_days", dataIndex: "closing_days", title: "CLOSING DAYS" },
-    { key: "departure_days", dataIndex: "departure_days", title: "DEPARTURE DAYS" },
-    { key: "pre_carriage", dataIndex: "pre_carriage", title: "PRE-CARRIAGE" }
-  ];
-
-  const rateColumns = [
-    { key: "cost_item_en", dataIndex: "cost_item_en", title: "Cost Description" },
-    { key: "currency", dataIndex: "currency", title: "Cost Unit Name" },
-    { key: "quote_unit_price", dataIndex: "quote_unit_price", title: "Unit Price" },
-    { key: "quality", dataIndex: "quality", title: "Quality" },
-    { key: "unit_name", dataIndex: "unit_name", title: "Unit" },
-    { key: "total_amount", dataIndex: "total_amount", title: "Price" }
+    { key: "carrier_name", dataIndex: "carrier_name", title: t("shipment.CARRIER") },
+    { key: "freight_service", dataIndex: "freight_service", title: t("shipment.FREIGHT SERVICE") },
+    { key: "closing_days", dataIndex: "closing_days", title: t("shipment.CLOSING DAYS") },
+    { key: "departure_days", dataIndex: "departure_days", title: t("shipment.DEPARTURE DAYS") },
+    { key: "pre_carriage", dataIndex: "pre_carriage", title: t("shipment.PRE-CARRIAGE") }
   ];
 
   const quoteData = useMemo(() => [{ ...dataSource?.quote_info, id: randomUUID() }], [dataSource]);
@@ -77,27 +45,13 @@ function DetailCost({ dataSource }) {
     [dataSource?.transit_information]
   );
 
-  const rateTabs = [
-    {
-      key: "origin",
-      label: "ORIGIN CHARGES",
-      children: <PrimaryTable dataSource={rateData} columns={rateColumns} />
-    },
-    {
-      key: "ocean",
-      label: "OCEAN FREIGHT",
-      children: <PrimaryTable dataSource={rateData} columns={rateColumns} />
-    },
-    {
-      key: "destination",
-      label: "DESTINATION CHARGES",
-      children: <PrimaryTable dataSource={rateData} columns={rateColumns} />
-    },
-    {
-      key: "service",
-      label: "SERVICE FEE",
-      children: <PrimaryTable dataSource={rateData} columns={rateColumns} />
-    }
+  const rateColumns = [
+    { title: t("billing.cost Description"), dataIndex: "cost_item_en" },
+    { title: t("billing.cost Unit Name"), dataIndex: "unit_name" },
+    { title: t("billing.unit Price"), dataIndex: "quote_unit_price" },
+    { title: t("billing.quality"), dataIndex: "quantity" },
+    { title: t("billing.unit"), dataIndex: "currency" },
+    { title: t("billing.price"), dataIndex: "total_amount" }
   ];
 
   return (
@@ -110,8 +64,8 @@ function DetailCost({ dataSource }) {
         columns={costColumns}
         dataSource={quoteData}
       />
-      <h2 className="my-0">Quote Details:</h2>
-      <h3 className="font-bold mt-1 text-[#69686D] ">Transit Information</h3>
+      <h2 className="my-0">{t("shipment.quote")}:</h2>
+      <h3 className="font-bold mt-1 text-[#69686D]">{t("shipment.transit Information")}</h3>
       <Table
         bordered
         rowKey="id"
@@ -121,8 +75,11 @@ function DetailCost({ dataSource }) {
       />
       <div className="flex">
         <div className="flex-6">
-          <h3 className="font-bold mb-1 text-[#69686D]">Rate Information</h3>
-          <RateInformations data={{ total: dataSource?.total || 0, rate_information: rateData }} />
+          <h3 className="font-bold my-1 text-[#69686D]">{t("shipment.rate Information")}</h3>
+          <RateInformation
+            data={{ total: dataSource?.total || 0, rate_information: rateData }}
+            column={rateColumns}
+          />
         </div>
         <Divider type="vertical" className="h-[80vh]" />
         <div className="flex-3">
@@ -149,34 +106,31 @@ function DetailCost({ dataSource }) {
             items={[
               {
                 isMain: false,
-                description: "PLACE OF PICKUP",
-                content: <p className="mb-4">{route?.receipt_place_port_id}</p>
+                description: <span className="text-base font-medium"> PLACE OF PICKUP</span>,
+                content: <p className="mb-4 text-[#A3A3A3]">{route?.receipt_place_port_id}</p>
               },
               {
                 isMain: false,
-                description: "DEPARTURE PORT",
-                content: <p className="mb-4">{route?.pol_port_id}</p>
+                description: <span className="text-base font-medium"> DEPARTURE PORT</span>,
+                content: <p className="mb-4 text-[#A3A3A3]">{route?.pol_port_id}</p>
               },
               {
                 isMain: false,
-                description: "TRANSIT PORT",
-                content: <p className="mb-4">{route?.transit_port_id}</p>
+                description: <span className="text-base font-medium"> TRANSIT PORT</span>,
+                content: <p className="mb-4 text-[#A3A3A3]">{route?.transit_port_id}</p>
               },
               {
                 isMain: false,
-                description: "ARRIVAL PORT",
-                content: <p className="mb-4">{route?.pod_port_id}</p>
+                description: <span className="text-base font-medium"> ARRIVAL PORT</span>,
+                content: <p className="mb-4 text-[#A3A3A3]">{route?.pod_port_id}</p>
               },
               {
                 isMain: false,
                 showBar: false,
-                description: "This is the receiving company",
-                content: (
-                  <p className="mb-4">
-                    {route?.delivery_place_port_name}
-                    {route?.delivery_place_port_address}
-                  </p>
-                )
+                description: (
+                  <span className="text-base font-medium">{route?.delivery_place_port_name}</span>
+                ),
+                content: <p className="mb-4 text-[#A3A3A3]">{route?.delivery_place_port_address}</p>
               }
             ]}
           />

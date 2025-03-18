@@ -88,10 +88,15 @@ function DrawerUpload({
   }
 
   function handleFinish(res) {
-    onFinish?.(res);
     message.success("Upload success");
     setLoading(false);
     setOpen(false);
+    onFinish?.(res);
+  }
+
+  function handleClose() {
+    setOpen(false);
+    setFileList([]);
   }
 
   const { setFiles } = useOssUploadFile(type, id, handleFinish);
@@ -100,6 +105,7 @@ function DrawerUpload({
 
   return (
     <Drawer
+      destroyOnClose
       classNames={{ header: "*:flex-row-reverse" }}
       width={500}
       footer={[
@@ -114,12 +120,12 @@ function DrawerUpload({
         >
           Submit
         </Button>,
-        <Button key="cancel" onClick={() => setOpen(false)}>
+        <Button key="cancel" onClick={handleClose}>
           Cancel
         </Button>
       ]}
       open={open}
-      onClose={() => setOpen(false)}
+      onClose={handleClose}
       {...drawerProps}
     >
       <Form form={form}>

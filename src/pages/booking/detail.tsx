@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Form, Input, Row, Col, message, Button, Select, Radio, DatePicker } from "antd";
 import { ReactNode } from "react";
 import useDetailList from "./detailList";
@@ -17,6 +17,7 @@ interface DetailListItem {
 }
 
 const MyForm: React.FC = () => {
+  const tableComponentRef = useRef<TableComponentRef>(null);
   const navigate = useNavigate();
   const { detailList, drop } = useDetailList();
   const [open, setOpen] = React.useState(false);
@@ -72,23 +73,47 @@ const MyForm: React.FC = () => {
     }
     return obj;
   }
-
+  function hasEmptyValuesInObjectArray(arr) {
+    for (const obj of arr) {
+      for (const key in obj) {
+        // 检查是否是空字符串、null、undefined 或空数组
+        if (
+          obj[key] == null ||
+          obj[key] === "" ||
+          (Array.isArray(obj[key]) && obj[key].length === 0)
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
   const onFinish = async (values: any) => {
-    const params = removeEmptyProperties({
-      ...values,
-      freight_cost: values.freight_cost.toString(),
-      goods_date: values.goods_date ? dayjs(values.goods_date).format("YYYY-MM-DD") : "",
-      loading_date: values.loading_date ? dayjs(values.loading_date).format("YYYY-MM-DD") : "",
-      box_list: tableData
-    });
-    if (obj) {
-      await bookingUpdateAPI(params, obj.id);
-      message.success("修改成功");
-      navigate("/booking");
-    } else {
-      await bookingAddAPI(params);
-      message.success("新增成功");
-      navigate("/booking");
+    try {
+      await tableComponentRef.current?.validate();
+      console.log(hasEmptyValuesInObjectArray(tableData));
+      if (hasEmptyValuesInObjectArray(tableData)) {
+        return message.error("表格数据不能为空");
+      }
+
+      const params = removeEmptyProperties({
+        ...values,
+        freight_cost: values?.freight_cost.toString(),
+        goods_date: values.goods_date ? dayjs(values.goods_date).format("YYYY-MM-DD") : "",
+        loading_date: values.loading_date ? dayjs(values.loading_date).format("YYYY-MM-DD") : "",
+        box_list: tableData
+      });
+      if (obj) {
+        await bookingUpdateAPI(params, obj.id);
+        message.success("修改成功");
+        navigate("/booking");
+      } else {
+        await bookingAddAPI(params);
+        message.success("新增成功");
+        navigate("/booking");
+      }
+    } catch (e) {
+      message.error("新增失败", e);
     }
   };
   const onChangeisBond = (e: any) => {
@@ -142,6 +167,11 @@ const MyForm: React.FC = () => {
     }
   };
 
+  const onFinishFailed = (errorInfo) => {
+    errorInfo.errorFields.map((e) => {
+      message.error(e.errors[0]);
+    });
+  };
   return (
     <>
       <Form
@@ -150,6 +180,7 @@ const MyForm: React.FC = () => {
         labelCol={{ span: 24 }} // 设置标签占满整行
         wrapperCol={{ span: 24 }} // 设置输入框占满整行
         onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Row gutter={[16, 16]}>
@@ -194,7 +225,11 @@ const MyForm: React.FC = () => {
               <Radio value={0}> 否 </Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item name="is_fumigated" label={"是否熏蒸"}>
+          <Form.Item
+            name="is_fumigated"
+            label={"是否熏蒸"}
+            rules={[{ required: !isFumigated, message: "请选择是否熏蒸" }]}
+          >
             <Radio.Group disabled={isFumigated}>
               <Radio value={1}> 是 </Radio>
               <Radio value={0}> 否 </Radio>
@@ -239,7 +274,7 @@ const MyForm: React.FC = () => {
             </Form.Item>
           </Col>
         </Row>
-        <TableComponent tableData={tableData} setTableData={setTableData} />
+        <TableComponent ref={tableComponentRef} tableData={tableData} setTableData={setTableData} />
         <Row gutter={[16, 16]}>
           <Col span={6}>
             <Form.Item name="is_declaration" label={"报关安排"}>
@@ -253,7 +288,7 @@ const MyForm: React.FC = () => {
             <Form.Item
               name="is_bond"
               label={"针对美线出运货物，进口商是否需要购买BOND"}
-              required={true}
+              rules={[{ required: true, message: `请选择` }]}
             >
               <Radio.Group onChange={onChangeisBond}>
                 <Radio value={1}> 进口商自行购买 </Radio>
@@ -265,7 +300,11 @@ const MyForm: React.FC = () => {
         </Row>
         <Row gutter={[16, 16]}>
           <Col span={6}>
-            <Form.Item name="bond_type" label={"BOND类型"}>
+            <Form.Item
+              name="bond_type"
+              label={"BOND类型"}
+              rules={[{ required: !bondType, message: "请选择BOND类型" }]}
+            >
               <Radio.Group disabled={bondType}>
                 <Radio value={1}> 年BOND </Radio>
                 <Radio value={2}> 次BOND </Radio>
@@ -273,7 +312,11 @@ const MyForm: React.FC = () => {
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item name="payment_type" label={"付款方式"} required={true}>
+            <Form.Item
+              name="payment_type"
+              label={"付款方式"}
+              rules={[{ required: true, message: "请选择付款方式" }]}
+            >
               <Select placeholder="请选择付款方式">
                 {drop.payment_type &&
                   Object.entries(drop.payment_type || {})
@@ -293,7 +336,11 @@ const MyForm: React.FC = () => {
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item name="freight_cost" label={"运费金额"} required={true}>
+            <Form.Item
+              name="freight_cost"
+              label={"运费金额"}
+              rules={[{ required: true, message: "请输入运费金额" }]}
+            >
               <Input />
             </Form.Item>
           </Col>

@@ -1,5 +1,6 @@
 import JSZip from "jszip";
-import { getFileName, useDownload } from "./useDownload.ts";
+import { useDownload } from "./useDownload.ts";
+import { getFileName } from "../utils/getFileInfo.ts";
 
 function downloadFile(filePath: string) {
   const xhr = new XMLHttpRequest();
