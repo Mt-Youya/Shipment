@@ -293,6 +293,7 @@ interface LoadingDetail {
 }
 
 export interface IShipmentDetail {
+  crd: string;
   /**
    * 承运人
    */
@@ -644,5 +645,13 @@ export interface TransitPort {
    * 航线
    */
   vessel: string;
+  [property: string]: any;
+}
+
+export interface IUploadSelectOptions {
+  upload_user_name: string;
+  upload_user_id: number;
+  admin_user_has_permission: boolean;
+  upload_platform: number;
   [property: string]: any;
 }

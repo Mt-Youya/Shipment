@@ -5,18 +5,21 @@ import { fileAPI } from "../../../service/shipmentAPI";
 import axios from "axios";
 import useDetailList from "../../booking/detailList";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
-const Billing = () => {
+const Files = () => {
   const { drop } = useDetailList();
 
   const dataTable = useRef<ActionType>();
   const dataForm = useRef<FormInstance>();
 
+  const { t } = useTranslation();
+
   const columns: ProColumns[] = [
-    { title: "Job No", dataIndex: "sea_order_no" },
-    { title: "File Name", dataIndex: "file_name" },
+    { title: t("business.job No"), dataIndex: "sea_order_no" },
+    { title: t("business.file Name"), dataIndex: "file_name" },
     {
-      title: "Date",
+      title: t("business.date"),
       dataIndex: "upload_time",
       sorter: true,
       valueType: "date",
@@ -25,7 +28,7 @@ const Billing = () => {
       }
     },
     {
-      title: "Uploader",
+      title: t("business.uploader"),
       dataIndex: "upload_user_name",
       valueType: "select",
       renderFormItem: (item, { defaultRender, ...rest }, form) => {
@@ -34,7 +37,7 @@ const Billing = () => {
             {...rest}
             placeholder="Please select"
             options={drop?.upload_user?.map((e) => ({
-              value: e.upload_user_id,
+              value: e.upload_user_id + "," + e.upload_platform,
               label: e.upload_user_name
             }))}
           />
@@ -42,7 +45,7 @@ const Billing = () => {
       }
     },
     {
-      title: "Action",
+      title: t("common.action"),
       hideInSearch: true,
       render: (_, record) => (
         <>
@@ -73,15 +76,13 @@ const Billing = () => {
         a.click();
         window.URL.revokeObjectURL(url);
       })
-      .catch((error) => {
-        message.error("Download failed: " + error);
-      });
+      .catch((error) => {});
   };
 
   return (
     <div>
       <div className="header">
-        <div className="title leading-7xl">Files</div>
+        <div className="title leading-7xl">{t("business.files")}</div>
       </div>
 
       <ProTable
@@ -96,7 +97,8 @@ const Billing = () => {
             per_page: pageSize,
             page: current,
             order_no: sea_order_no,
-            user_id: upload_user_name,
+            user_id: upload_user_name ? upload_user_name.split(",")[0] : "",
+            upload_platform: upload_user_name ? upload_user_name.split(",")[1] : "",
             upload_date: upload_time
           });
           return { data: res.list, total: res.meta.total, success: true };
@@ -118,7 +120,7 @@ const Billing = () => {
 
           optionRender: () => [
             <Button key="search" type="primary" onClick={() => dataForm.current?.submit()}>
-              Search
+              {t("common.search")}
             </Button>,
             <Button
               key="reset"
@@ -129,7 +131,7 @@ const Billing = () => {
                 dataForm.current?.submit();
               }}
             >
-              Clear Filters
+              {t("common.clear")}
             </Button>
           ]
         }}
@@ -137,7 +139,7 @@ const Billing = () => {
         pagination={{
           pageSize: 10,
           showQuickJumper: true,
-          showTotal: (total) => `Total ${total} data`
+          showTotal: (total) => `${t("common.total")} ${total} ${t("common.entries")}`
         }}
         rowKey="id"
         toolBarRender={false}
@@ -145,4 +147,4 @@ const Billing = () => {
     </div>
   );
 };
-export default Billing;
+export default Files;

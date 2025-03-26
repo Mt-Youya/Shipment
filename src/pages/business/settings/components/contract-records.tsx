@@ -5,6 +5,7 @@ import { Button, Select } from "antd";
 import { useRef } from "react";
 import { companyContractAPI } from "../../../../service/shipmentAPI";
 import useDetailList from "../../../booking/detailList";
+import { useTranslation } from "react-i18next";
 
 const valueEnum = {
   0: "close",
@@ -29,22 +30,25 @@ export default () => {
   const { drop } = useDetailList();
   const dataTable = useRef<ActionType>();
   const dataForm = useRef<FormInstance>();
+  const { t } = useTranslation();
   const columns: ProColumns<TableListItem>[] = [
     {
-      title: "Contract Number",
+      title: t("business.contract Number"),
       dataIndex: "contract_no",
       ellipsis: true
     },
     {
-      title: "Contract Name",
+      title: t("business.contract Name"),
       dataIndex: "contract_name"
     },
     {
-      title: "Contract Type",
+      title: t("business.contract Type"),
       dataIndex: "contract_type",
       valueType: "select",
       renderText: (item) => {
-        return drop.contract_type[item] || "";
+        if (drop?.contract_type) {
+          return drop?.contract_type[item] || "";
+        }
       },
       renderFormItem: (item, { defaultRender, ...rest }) => {
         return (
@@ -60,17 +64,17 @@ export default () => {
       }
     },
     {
-      title: "Effective Date",
+      title: t("business.effective Date"),
       dataIndex: "effective_from",
       valueType: "date"
     },
     {
-      title: "Expiring Date",
+      title: t("business.expiring Date"),
       dataIndex: "expiration_date",
       valueType: "date"
     },
     {
-      title: "Notes",
+      title: t("business.notes"),
       dataIndex: "remark",
       ellipsis: true,
       hideInSearch: true
@@ -110,7 +114,7 @@ export default () => {
         collapseRender: false,
         optionRender: () => [
           <Button key="search" type="primary" onClick={() => dataForm.current?.submit()}>
-            Filter
+            {t("common.filter")}
           </Button>
         ]
       }}

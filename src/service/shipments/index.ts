@@ -1,5 +1,11 @@
 import http from "../../utils/axios";
-import { IRouteFileList, IShipmentDetail, IShipmentMap, IShipmentType } from "./shipment.type.ts";
+import type {
+  IRouteFileList,
+  IShipmentDetail,
+  IShipmentMap,
+  IShipmentType,
+  IUploadSelectOptions
+} from "./shipment.type.ts";
 
 export const getShipments = (data) =>
   http.post<{ list: IShipmentType[] }>({ data, url: `/web/order` });
@@ -10,5 +16,9 @@ export const getShipmentDetail = (order: string) =>
 export const getShipmentDetailFile = (order: string, data) =>
   http.post<{ list: IRouteFileList[] }>({ url: `/web/order/${order}/file`, data });
 
-export const getShipmentMap = (order: string) =>
+export const getShipmentMap = (order?: string) =>
   http.get<IShipmentMap>({ url: `/web/order/${order}/map` });
+
+export function getUploadUsers(data) {
+  return http.post<IUploadSelectOptions[]>({ url: "/web/uploadUsers", data });
+}

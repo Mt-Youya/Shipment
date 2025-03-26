@@ -4,10 +4,11 @@ import { Progress } from "antd";
 const status = [
   "Awaiting Arrival at Departure Port",
   "Arrived at Departure Port",
-  "Estimated Time of Departure (ETD)",
-  "Actual Time of Departure (ATD)",
-  "Estimated Time of Arrival (ETA)",
-  "Actual Time of Arrival (ATA)",
+  // "Estimated Time of Departure (ETD)",
+  // "Actual Time of Departure (ATD)",
+  // "Estimated Time of Arrival (ETA)",
+  // "Actual Time of Arrival (ATA)",
+  "In transit",
   "Final Delivery",
   "Delivered"
 ];
@@ -26,8 +27,6 @@ const ShipmentStatus: React.FC<ShipmentStatusProps> = ({ currentStatus }) => {
   const progress = getProgressPercentage(status, currentStatus);
 
   const circleWidth = 8; // 圆球宽度
-  const circleSpacing = circleWidth / 2; // 圆球之间的间距
-  const totalWidth = 300; // 进度条宽度
 
   return (
     <div style={{ position: "relative", width: "300px", marginRight: "20px" }}>
@@ -40,7 +39,7 @@ const ShipmentStatus: React.FC<ShipmentStatusProps> = ({ currentStatus }) => {
             style={{
               position: "absolute",
               left: percent + "%",
-              top: "9px", // 调整圆点到进度条上方的距离
+              top: "8.5px", // 调整圆点到进度条上方的距离
               width: `${circleWidth}px`,
               height: `${circleWidth}px`,
               backgroundColor: "#ffffff",

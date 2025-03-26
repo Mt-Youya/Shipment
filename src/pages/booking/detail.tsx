@@ -1,5 +1,16 @@
 import React, { useEffect, useRef } from "react";
-import { Form, Input, Row, Col, message, Button, Select, Radio, DatePicker } from "antd";
+import {
+  Form,
+  Input,
+  Row,
+  Col,
+  message,
+  Button,
+  Select,
+  Radio,
+  DatePicker,
+  InputNumber
+} from "antd";
 import { ReactNode } from "react";
 import useDetailList from "./detailList";
 import TableComponent from "./tableComponent";
@@ -8,6 +19,7 @@ import Notice from "./Notice";
 import { bookingAddAPI, bookingListAPI, bookingUpdateAPI } from "../../service/shipmentAPI";
 import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 interface DetailListItem {
   type: string;
   col: number;
@@ -29,12 +41,16 @@ const MyForm: React.FC = () => {
   const [isFumigated, setisFumigated] = React.useState<boolean>(false);
   const [isAddress, setisAddress] = React.useState<boolean>(false);
   const [tableData, setTableData] = React.useState<DataType[]>([]);
+  const [disable, setDisable] = React.useState<boolean>(false);
 
   const obj = location.state?.obj;
 
   useEffect(() => {
     if (obj && Object.keys(drop).length > 0) {
       getDetail(obj.id);
+      setDisable(false);
+    } else {
+      setDisable(true);
     }
   }, [drop, obj]);
 
@@ -112,9 +128,7 @@ const MyForm: React.FC = () => {
         message.success("新增成功");
         navigate("/booking");
       }
-    } catch (e) {
-      message.error("新增失败", e);
-    }
+    } catch (e) { }
   };
   const onChangeisBond = (e: any) => {
     if (e.target.value === 0) {
@@ -168,10 +182,14 @@ const MyForm: React.FC = () => {
   };
 
   const onFinishFailed = (errorInfo) => {
-    errorInfo.errorFields.map((e) => {
-      message.error(e.errors[0]);
-    });
+    console.log(errorInfo);
+    message.error(errorInfo.errorFields[0].errors[0]);
+    // errorInfo.errorFields.map((e) => {
+    //   message.error(e.errors[0]);
+    // });
   };
+
+  const { t } = useTranslation();
   return (
     <>
       <Form
@@ -191,7 +209,18 @@ const MyForm: React.FC = () => {
                   key={item.name}
                   name={item.name}
                   label={item.label}
-                  rules={[{ required: true, message: `请输入${item.label}` }]}
+                  rules={
+                    item.name === "delivery_address"
+                      ? [
+                        { required: true, message: `请输入${item.label}` },
+                        {
+                          max: 255,
+                          message:
+                            "The delivery address field must not be greater than 255 characters!"
+                        }
+                      ]
+                      : [{ required: true, message: `请输入${item.label}` }]
+                  }
                 >
                   {item.type === "input" && <Input placeholder={item.placeholder} />}
                   {item.type === "select" && (
@@ -208,8 +237,8 @@ const MyForm: React.FC = () => {
                   )}
                   {item.type === "radio" && (
                     <Radio.Group>
-                      <Radio value={1}> 是 </Radio>
-                      <Radio value={0}> 否 </Radio>
+                      <Radio value={1}> {t("common.yes")} </Radio>
+                      <Radio value={0}> {t("common.no")} </Radio>
                     </Radio.Group>
                   )}
                   {item.type === "date" && <DatePicker />}
@@ -219,57 +248,85 @@ const MyForm: React.FC = () => {
         </Row>
 
         <Row gutter={[16, 16]}>
-          <Form.Item name="is_wooden" label={"含木质包装"}>
+          <Form.Item
+            name="is_wooden"
+            label={t("booking.wooden Packing?")}
+            rules={[{ required: !isFumigated, message: "请选择是否含木质包装" }]}
+          >
             <Radio.Group onChange={onChangeiswooden}>
-              <Radio value={1}> 是 </Radio>
-              <Radio value={0}> 否 </Radio>
+              <Radio value={1}> {t("common.yes")} </Radio>
+              <Radio value={0}> {t("common.no")} </Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item
             name="is_fumigated"
-            label={"是否熏蒸"}
-            rules={[{ required: !isFumigated, message: "请选择是否熏蒸" }]}
+            label={t("booking.whether to fumigate")}
+            rules={[
+              { required: !isFumigated, message: t("booking.please select whether to fumigate") }
+            ]}
           >
             <Radio.Group disabled={isFumigated}>
-              <Radio value={1}> 是 </Radio>
-              <Radio value={0}> 否 </Radio>
+              <Radio value={1}> {t("common.yes")} </Radio>
+              <Radio value={0}> {t("common.no")} </Radio>
             </Radio.Group>
           </Form.Item>
         </Row>
         <Row gutter={[16, 16]}>
-          <Form.Item name="is_vgm" label={"是否需要顺欣达申报VGM"}>
+          <Form.Item
+            name="is_vgm"
+            label={t("booking.VGM Required ?")}
+            rules={[{ required: true, message: t("common.please select") }]}
+          >
             <Radio.Group onChange={onChangeIsVgm}>
-              <Radio value={1}> 是 </Radio>
-              <Radio value={0}> 否 </Radio>
+              <Radio value={1}> {t("common.yes")} </Radio>
+              <Radio value={0}> {t("common.no")} </Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item name="is_trailer" label={"拖车安排"}>
+          <Form.Item name="is_trailer" label={t("booking.trucking required?")}>
             <Radio.Group disabled={isTrailer} onChange={onChangeisTrailer}>
-              <Radio value={1}> 是 </Radio>
-              <Radio value={0}> 否 </Radio>
+              <Radio value={1}> {t("common.yes")} </Radio>
+              <Radio value={0}> {t("common.no")} </Radio>
             </Radio.Group>
           </Form.Item>
         </Row>
         <Row gutter={[16, 16]}>
           <Col span={8}>
-            <Form.Item name="loading_date" label={"装货时间"}>
+            <Form.Item name="loading_date" label={t("booking.PICK UP DATE")}>
               <DatePicker disabled={isAddress} />
             </Form.Item>
           </Col>
           <Col span={16}>
-            <Form.Item name="loading_address" label={"装货地址"}>
+            <Form.Item
+              name="loading_address"
+              label={t("booking.pick Up Address")}
+              rules={[
+                {
+                  max: 255,
+                  message: "The loading address field must not be greater than 255 characters!"
+                }
+              ]}
+            >
               <Input disabled={isAddress} />
             </Form.Item>
           </Col>
         </Row>
         <Row gutter={[16, 16]}>
           <Col span={8}>
-            <Form.Item name="link_person" label={"联系人"}>
+            <Form.Item name="link_person" label={t("booking.contact")}>
               <Input disabled={isAddress} />
             </Form.Item>
           </Col>
           <Col span={16}>
-            <Form.Item name="special_requirement" label={"特别要求"}>
+            <Form.Item
+              name="special_requirement"
+              label={t("booking.special Requests")}
+              rules={[
+                {
+                  max: 2000,
+                  message: "The special requirement field must not be greater than 2000 characters!"
+                }
+              ]}
+            >
               <Input disabled={isAddress} />
             </Form.Item>
           </Col>
@@ -277,23 +334,26 @@ const MyForm: React.FC = () => {
         <TableComponent ref={tableComponentRef} tableData={tableData} setTableData={setTableData} />
         <Row gutter={[16, 16]}>
           <Col span={6}>
-            <Form.Item name="is_declaration" label={"报关安排"}>
+            <Form.Item
+              name="is_declaration"
+              label={t("booking.export Customs Declaration Required ?")}
+            >
               <Radio.Group>
-                <Radio value={1}> 是 </Radio>
-                <Radio value={0}> 否 </Radio>
+                <Radio value={1}> {t("common.yes")} </Radio>
+                <Radio value={0}> {t("common.no")} </Radio>
               </Radio.Group>
             </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item
               name="is_bond"
-              label={"针对美线出运货物，进口商是否需要购买BOND"}
+              label={t("booking.BOND")}
               rules={[{ required: true, message: `请选择` }]}
             >
               <Radio.Group onChange={onChangeisBond}>
-                <Radio value={1}> 进口商自行购买 </Radio>
-                <Radio value={2}> SXD代买 </Radio>
-                <Radio value={0}> 不需要 </Radio>
+                <Radio value={1}> {t("booking.importer's Self-Purchase")} </Radio>
+                <Radio value={2}> {t("booking.SXD Proxy Purchase")} </Radio>
+                <Radio value={0}> {t("booking.no")} </Radio>
               </Radio.Group>
             </Form.Item>
           </Col>
@@ -302,19 +362,19 @@ const MyForm: React.FC = () => {
           <Col span={6}>
             <Form.Item
               name="bond_type"
-              label={"BOND类型"}
+              label={t("booking.bond Type")}
               rules={[{ required: !bondType, message: "请选择BOND类型" }]}
             >
               <Radio.Group disabled={bondType}>
-                <Radio value={1}> 年BOND </Radio>
-                <Radio value={2}> 次BOND </Radio>
+                <Radio value={1}> {t("booking.annual Bond")} </Radio>
+                <Radio value={2}> {t("booking.single Entry Bond")} </Radio>
               </Radio.Group>
             </Form.Item>
           </Col>
           <Col span={6}>
             <Form.Item
               name="payment_type"
-              label={"付款方式"}
+              label={t("booking.freight & Charges")}
               rules={[{ required: true, message: "请选择付款方式" }]}
             >
               <Select placeholder="请选择付款方式">
@@ -328,34 +388,32 @@ const MyForm: React.FC = () => {
                         </Select.Option>
                       );
                     })}
-
-                {/* <Select.Option value={1}>预付</Select.Option>
-                <Select.Option value={2}>预付</Select.Option>
-                <Select.Option value={3}>预付</Select.Option> */}
               </Select>
             </Form.Item>
           </Col>
           <Col span={6}>
             <Form.Item
               name="freight_cost"
-              label={"运费金额"}
+              label={t("booking.freight Amount")}
               rules={[{ required: true, message: "请输入运费金额" }]}
             >
-              <Input />
+              <InputNumber min={0} />
             </Form.Item>
           </Col>
         </Row>
         <Notice />
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <Form.Item style={{ marginRight: "10px" }}>
-            <Button htmlType="submit">存为草稿</Button>
+            <Button htmlType="submit">{t("booking.save as Draft")}</Button>
           </Form.Item>
           <Form.Item style={{ marginRight: "10px" }}>
-            <Button onClick={() => setOpen(true)}>Upload booking letter</Button>
+            <Button disabled={disable} onClick={() => setOpen(true)}>
+              {t("booking.upload booking letter")}
+            </Button>
           </Form.Item>
           <Form.Item style={{ marginRight: "10px" }}>
             <Button type="primary" htmlType="submit">
-              Confirm and download the booking letter
+              {t("booking.confirm and download the booking letter")}
             </Button>
           </Form.Item>
         </div>

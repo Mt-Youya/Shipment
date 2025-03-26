@@ -51,6 +51,10 @@ p,
   }
 }
 
+.ant-table{
+  color: #000!important;
+}
+
 .ant-tabs .ant-tabs-tab .ant-tabs-tab-btn {
   font-weight: bolder;
 }

@@ -1,8 +1,9 @@
 import { Table } from "antd";
+import { useTranslation } from "react-i18next";
 import { useDownload } from "@/hooks/useDownload.js";
 import DetailOrder from "./detail-order";
 import formatDateTime from "@/utils/formatDateTime.js";
-import { useTranslation } from "react-i18next";
+import randomUUID from "@/utils/randomUUID.js";
 
 function DetailBill({ dataSource, ...props }) {
   const { t } = useTranslation();
@@ -17,14 +18,17 @@ function DetailBill({ dataSource, ...props }) {
     {
       title: t("shipment.action"),
       dataIndex: "file_url",
-      render: (url) => (
-        <img
-          alt="Download"
-          src="/images/icons/Download.svg"
-          className="w-2.5 aspect-square cursor-pointer"
-          onClick={() => useDownload(url)}
-        />
-      )
+      render: (url) =>
+        url && (
+          <img
+            alt="Download"
+            src="/images/icons/Download.svg"
+            className="w-2.5 aspect-square cursor-pointer"
+            onClick={() =>
+              Array.isArray(url) ? url.forEach((u) => useDownload(u)) : useDownload(url)
+            }
+          />
+        )
     }
   ];
 
@@ -34,7 +38,7 @@ function DetailBill({ dataSource, ...props }) {
       rowKey="id"
       className="my-1 mx-1"
       pagination={false}
-      dataSource={dataSource}
+      dataSource={dataSource?.map((item) => ({ id: randomUUID(), ...item })) || []}
       columns={columns}
       {...props}
     />

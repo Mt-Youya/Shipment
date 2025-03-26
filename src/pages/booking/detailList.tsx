@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { getDropdown } from "../../service/common";
+import { useTranslation } from "react-i18next";
 
 interface ChildType {
   name: string;
@@ -20,99 +21,114 @@ const useDetailList = () => {
       console.error("Failed to fetch data:", err);
     }
   };
+  const { t, i18n } = useTranslation();
 
   const detailList = useMemo(() => {
     return [
       {
         type: "input",
         id: 1,
-        label: "询价单号",
+        label: t("booking.quotation number"),
         name: "inquiry_no",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6"
       },
-      { type: "input", id: 2, label: "发货人", name: "shipper", placeholder: "请输入", col: "6" },
-      { type: "input", id: 3, label: "收货人", name: "consignee", placeholder: "请输入", col: "6" },
+      {
+        type: "input",
+        id: 2,
+        label: t("booking.shipper"),
+        name: "shipper",
+        placeholder: t("common.please typing"),
+        col: "6"
+      },
+      {
+        type: "input",
+        id: 3,
+        label: t("booking.consignee"),
+        name: "consignee",
+        placeholder: t("common.please typing"),
+        col: "6"
+      },
       {
         type: "input",
         id: 4,
-        label: "通知人",
+        label: t("booking.notify Party"),
         name: "notify_party",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6"
       },
       {
         type: "input",
         id: 5,
-        label: "第二通知人",
+        label: t("booking.ALSO NOTIFY"),
         name: "sub_notify_party",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6"
       },
       {
         type: "input",
         id: 6,
-        label: "收货地",
+        label: t("booking.place Of Receipt"),
         name: "receipt_place",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6"
       },
       {
         type: "input",
         id: 7,
-        label: "起运港",
+        label: t("booking.port Of Loading"),
         name: "loading_port",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6"
       },
       {
         type: "input",
         id: 8,
-        label: "目的港",
+        label: t("booking.port Of Discharge"),
         name: "destination_port",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6"
       },
       {
         type: "input",
         id: 9,
-        label: "目的地",
+        label: t("booking.place Of Delivery"),
         name: "destination",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6"
       },
       {
         type: "select",
         id: 10,
-        label: "业务类型",
+        label: t("booking.shipment type"),
         name: "business_type",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6",
         optionList: Object.entries(drop.business_type || {}).map(([key, label]) => ({ key, label }))
       },
       {
         type: "input",
         id: 11,
-        label: "箱装数量",
+        label: t("booking.quantity"),
         name: "box_spec",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6"
       },
       {
         type: "select",
         id: 12,
-        label: "贸易条款",
+        label: t("booking.inco-Terms"),
         name: "trade_terms",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6",
         optionList: Object.entries(drop.trade_terms || {}).map(([key, label]) => ({ key, label }))
       },
       {
         type: "select",
         id: 13,
-        label: "运输条款",
+        label: t("booking.service Type"),
         name: "transport_type",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6",
         optionList: Object.entries(drop.delivery_type || {}).map(([key, label]) => ({
           key,
@@ -122,47 +138,54 @@ const useDetailList = () => {
       {
         type: "input",
         id: 14,
-        label: "派送地址",
+        label: t("booking.delivery Address"),
         name: "delivery_address",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "12"
       },
       {
         type: "select",
         id: 15,
-        label: "货物种类",
+        label: t("booking.types Of Goods"),
         name: "goods_type",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6",
         optionList: Object.entries(drop.goods_type || {}).map(([key, label]) => ({ key, label }))
       },
       {
         type: "date",
         id: 16,
-        label: "货好日期",
+        label: t("booking.crd"),
         name: "goods_date",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6"
       },
       {
         type: "radio",
         id: 17,
-        label: "是否需要保险",
+        label: t("booking.insurance Required ?"),
         name: "is_insurance",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6"
       },
-      { type: "radio", id: 18, label: "含油", name: "is_oil", placeholder: "请输入", col: "6" },
+      {
+        type: "radio",
+        id: 18,
+        label: t("booking.oil Included ?"),
+        name: "is_oil",
+        placeholder: t("common.please typing"),
+        col: "6"
+      },
       {
         type: "radio",
         id: 19,
-        label: "含电",
+        label: t("booking.batteries Included ?"),
         name: "is_electronic",
-        placeholder: "请输入",
+        placeholder: t("common.please typing"),
         col: "6"
       }
     ];
-  }, [drop]);
+  }, [drop, i18n.language]);
 
   return { detailList, drop };
 };

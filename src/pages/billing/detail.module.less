@@ -1,0 +1,35 @@
+input[type='checkbox'] {
+  margin-left: 1px !important;
+}
+
+.rateInfoWrapper {
+  :global {
+    .ant-tabs-tabpane.ant-tabs-tabpane-active {
+      .-mt-1 {
+        margin-top: 0;
+      }
+
+      ul.mx-2.my-0 {
+        margin: 0 10px 0;
+      }
+    }
+
+    .ant-tabs-card {
+      &.ant-tabs-top {
+        & > .ant-tabs-nav .ant-tabs-tab {
+          border-radius: 0;
+        }
+      }
+
+      .ant-tabs-nav-list {
+        .ant-tabs-tab {
+          margin: 0 !important;
+        }
+      }
+
+      .ant-tabs-content.ant-tabs-content-top {
+        border: 1px solid #f0f0f0;
+      }
+    }
+  }
+}

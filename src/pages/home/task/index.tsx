@@ -19,8 +19,7 @@ const index: React.FC<{ data: any }> = (props) => {
                 onClick={() => navigator("/shipment/detail/" + item?.sea_order_id)}
               >
                 <div className={styles.RT_itemone}>{item.title}</div>
-                <div style={{ maxWidth: "340px", columnCount: 2, columnGap: 0 }}>
-                  {item.po_list.length > 0 &&
+                {item.po_list.length > 0 &&
                     item.po_list.map((e) => (
                       <span
                         className={styles.RT_itemtwo}
@@ -31,7 +30,6 @@ const index: React.FC<{ data: any }> = (props) => {
                         ))}
                       </span>
                     ))}
-                </div>
 
                 <div style={{ display: "flex", justifyContent: "space-between", color: "#A3A3A3" }}>
                   <div
@@ -48,8 +46,8 @@ const index: React.FC<{ data: any }> = (props) => {
                     {item.task_type === 3 && "Make Payment"}
                   </div>
                   <div style={{ display: "flex", alignItems: "center" }}>
-                    <img src="images/time.png" alt="" style={{ width: "16px" }} />
-                    &nbsp; DUE:{dayjs(new Date(item.deadline)).format("MMMDD")}
+                    {/* <img src="images/time.png" alt="" style={{ width: "16px" }} />
+                    &nbsp; DUE:{dayjs(new Date(item.deadline)).format("MMMDD")} */}
                   </div>
                 </div>
               </div>

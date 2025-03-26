@@ -28,7 +28,13 @@ function index() {
       setCount(res.count);
     } catch (error) {
       fullLoading.hide();
-      message.error("error");
+    }
+  };
+  const currentStatus = (e) => {
+    if (e.includes("ATD") || e.includes("ETD") || e.includes("ATA")) {
+      return "In transit";
+    } else {
+      return e;
     }
   };
 
@@ -119,7 +125,7 @@ function index() {
                   <div
                     style={{ display: "flex", justifyContent: "space-between", color: "#A3A3A3" }}
                   >
-                    <div style={{ maxWidth: "340px", columnCount: 2, columnGap: 0 }}>
+                    <div className="flex flex-wrap" style={{ maxWidth: "350px", columnCount: 2, columnGap: 0 }}>
                       {e.po_order.length > 0 &&
                         e.po_order.map((item) => (
                           <span
@@ -132,7 +138,7 @@ function index() {
                           </span>
                         ))}
                     </div>
-                    <ProgressComp currentStatus={e.order_progress} />
+                    <ProgressComp currentStatus={currentStatus(e.order_progress)} />
                   </div>
 
                   <div

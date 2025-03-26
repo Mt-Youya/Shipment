@@ -21,7 +21,6 @@ const DynamicIcon = ({
         width: size,
         height: size,
         margin,
-        filter: isSelected ? "opacity(1)" : "opacity(0.6)"
       }}
     />
   );

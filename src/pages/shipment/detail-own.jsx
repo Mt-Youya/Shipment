@@ -1,6 +1,7 @@
 import { Table } from "antd";
-import DetailOrder from "./detail-order";
 import { useTranslation } from "react-i18next";
+import randomUUID from "@/utils/randomUUID.js";
+import DetailOrder from "./detail-order";
 
 function DetailOwn({ service, container, cargo }) {
   const { t } = useTranslation();
@@ -34,7 +35,7 @@ function DetailOwn({ service, container, cargo }) {
         bordered
         rowKey="id"
         pagination={false}
-        dataSource={service}
+        dataSource={service?.map((item, index) => ({ id: randomUUID(), ...item }))}
         loading={!service}
         columns={serviceColumns}
       />
@@ -44,7 +45,7 @@ function DetailOwn({ service, container, cargo }) {
         bordered
         rowKey="container_no"
         pagination={false}
-        dataSource={container}
+        dataSource={container?.map((item, index) => ({ id: randomUUID(), ...item }))}
         loading={!container}
         columns={containerColumns}
       />
@@ -54,7 +55,7 @@ function DetailOwn({ service, container, cargo }) {
         bordered
         rowKey="id"
         pagination={false}
-        dataSource={cargo}
+        dataSource={cargo?.map((item, index) => ({ id: randomUUID(), ...item }))}
         loading={!cargo}
         columns={cargoColumns}
       />

@@ -4,19 +4,20 @@ import { useTranslation } from "react-i18next";
 import { Local, Session } from "../../utils/storage.ts";
 import DynamicIcon from "./dynamic-icon";
 import useCurrentUserStore from "../../store/current-user.ts";
-import {LangStore} from "../../store/lang.ts";
-
+import { LangStore } from "../../store/lang.ts";
+import useRouteStore from "../../store/route.ts";
 const { confirm } = Modal;
 
 const Info = () => {
   const { t, i18n } = useTranslation();
-
+  const [reset] = useRouteStore((state) => [state.reset]);
   const navigate = useNavigate();
 
   const onLogout = () => {
     Session.clear();
     Local.clear();
     navigate("/login");
+    reset();
   };
 
   const showPropsConfirm = () => {
@@ -39,12 +40,12 @@ const Info = () => {
     });
   };
 
-  const { setLang } = LangStore()
+  const { setLang } = LangStore();
   const onChangeLang = () => {
     const isEn = i18n.language === "en";
     const lang = isEn ? "zh-CN" : "en";
     i18n.changeLanguage(lang);
-    setLang(lang)
+    setLang(lang);
   };
 
   const { user } = useCurrentUserStore();
@@ -61,7 +62,7 @@ const Info = () => {
         </div>
         <DynamicIcon iconName="exchange" isSelected={false} size={16} margin="0" />
       </div>
-      <div className="flex items-center justify-between py-1.5 px-1 cursor-pointer hover:bg-graye6 hover:bg-opacity-50">
+      {/* <div className="flex items-center justify-between py-1.5 px-1 cursor-pointer hover:bg-graye6 hover:bg-opacity-50">
         <div className="flex items-center">
           <DynamicIcon iconName="notice" isSelected={false} />
           <span className="ml-1 text-base font-medium">{t("sideBar.message")}</span>
@@ -69,7 +70,7 @@ const Info = () => {
         <span className="bg-[#FF515E] text-white text-center rounded-full text-xs w-2.5 h-2.5 leading-2xl">
           9
         </span>
-      </div>
+      </div> */}
       <div
         className="flex items-center justify-between py-1.5 px-1 cursor-pointer hover:bg-graye6 hover:bg-opacity-50"
         onClick={showPropsConfirm}

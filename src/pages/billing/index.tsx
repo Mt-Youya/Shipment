@@ -1,10 +1,9 @@
 import { ProTable, type ActionType, type ProColumns } from "@ant-design/pro-components";
 import { Button, Divider, Table, type FormInstance } from "antd";
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { getBillings } from "../../service/billings";
 import { useNavigate } from "react-router-dom";
-import { BillingStore } from "../../store/billings.ts";
-import { useTranslation } from "react-i18next";
 import styles from "./index.module.less";
 import DrawerUpload from "../../components/DrawerUpload";
 import formatDateTime from "../../utils/formatDateTime.ts";
@@ -29,7 +28,12 @@ function Billing() {
         </a>
       )
     },
-    { title: t("billing.issued"), dataIndex: "issued", hideInSearch: true },
+    {
+      title: t("billing.issued"),
+      dataIndex: "created_at",
+      hideInSearch: true,
+      render: (item) => formatDateTime(item)
+    },
     {
       title: t("billing.due"),
       dataIndex: "due",
@@ -42,8 +46,9 @@ function Billing() {
       dataIndex: "status",
       valueType: "select",
       valueEnum: {
-        0: { text: t("common.unpaid"), status: "Warning" },
-        1: { text: t("common.paid"), status: "Success" }
+        0: { text: t("status.unpaid"), status: "Warning" },
+        1: { text: t("status.unsettled"), status: "Processing" },
+        2: { text: t("status.paid"), status: "Success" }
       }
     },
     {
@@ -51,13 +56,12 @@ function Billing() {
       dataIndex: "invoice_type",
       valueType: "select",
       valueEnum: {
-        null: t("selections.null"),
         1: t("selections.bill"),
         2: t("selections.debit note")
       }
     },
-    { title: t("billing.amount"), dataIndex: "amount", hideInSearch: true },
-    { title: t("billing.balance"), dataIndex: "balance", hideInSearch: true },
+    { title: t("billing.amount"), dataIndex: "total_amount", hideInSearch: true },
+    { title: t("billing.balance"), dataIndex: "remain_amount", hideInSearch: true },
     {
       title: t("billing.action"),
       dataIndex: "shipper",
@@ -93,7 +97,6 @@ function Billing() {
   }
 
   const selects = useRef<number[]>([]);
-  const { setBillingData } = BillingStore();
 
   const [open, setOpen] = useState(false);
   const [uploadOptions, setUploadOptions] = useState({
@@ -120,6 +123,8 @@ function Billing() {
           request={async (params, sort, filter) => {
             const { pageSize, current, ...param } = params;
             const rest = {
+              ...sort,
+              ...filter,
               page: current,
               per_page: pageSize,
               sort_type: 1,
@@ -131,7 +136,6 @@ function Billing() {
             list.forEach((item) => {
               item.invoice_type = item.invoice_type.value;
             });
-            setBillingData(list);
             return { data: list, total: meta?.total, success };
           }}
           options={false}

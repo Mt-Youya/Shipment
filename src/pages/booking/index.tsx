@@ -1,11 +1,12 @@
-import { ActionType, ProColumns, ProTable } from "@ant-design/pro-components";
-import { Button, FormInstance, Dropdown, Drawer, Select, Space } from "antd";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import UploadComponent from "../../components/UploadComponent";
-import { shipmentAPI, uploadAPI, uploadLogAPI } from "../../service/shipmentAPI";
-import useDetailList from "./detailList";
+import { Button, FormInstance, Select, Space } from "antd";
+import { ActionType, ProColumns, ProTable } from "@ant-design/pro-components";
+import { useTranslation } from "react-i18next";
+import { shipmentAPI } from "../../service/shipmentAPI";
 import dayjs from "dayjs";
+import UploadComponent from "../../components/UploadComponent";
+import useDetailList from "./detailList";
 
 const shipment = () => {
   const { drop } = useDetailList();
@@ -15,10 +16,12 @@ const shipment = () => {
   const dataTable = useRef<ActionType>();
   const dataForm = useRef<FormInstance>();
 
+  const { t } = useTranslation();
+
   const columns: ProColumns[] = [
-    { title: "Name", dataIndex: "title", ellipsis: true },
+    { title: t("booking.name"), dataIndex: "title", ellipsis: true },
     {
-      title: "Cargo Ready Date",
+      title: t("booking.cargo Ready Date"),
       dataIndex: "goods_date",
       hideInSearch: true,
       render: (e, b) => {
@@ -26,7 +29,7 @@ const shipment = () => {
       }
     },
     {
-      title: "Consignee",
+      title: t("booking.consignee"),
       dataIndex: "consignee",
       valueType: "select",
       renderFormItem: (item, { defaultRender, ...rest }, form) => {
@@ -43,21 +46,21 @@ const shipment = () => {
       }
     },
     {
-      title: "Weight",
+      title: t("booking.grossWeight") + '(KG)',
       dataIndex: "weight",
       valueType: "digit",
       hideInSearch: true,
       render: (_, record) => record.booking_detail.weight
     },
     {
-      title: "Volume",
+      title: t("booking.volume") + '(CBM)',
       dataIndex: "volume",
       valueType: "digit",
       hideInSearch: true,
       render: (_, record) => record.booking_detail.volume
     },
     {
-      title: "Creation Date",
+      title: t("booking.creation Date"),
       dataIndex: "created_at",
       valueType: "date",
       render: (e, b) => {
@@ -65,12 +68,12 @@ const shipment = () => {
       }
     },
     {
-      title: "Status",
+      title: t("booking.status"),
       dataIndex: "status",
       width: 100,
       render: (text) => {
-        if (text === 0) return "草稿";
-        if (text === 1) return "已完成";
+        if (text === 0) return t("status.draft");
+        if (text === 1) return t("status.completed");
       },
       renderFormItem: (item, { defaultRender, ...rest }, form) => {
         if (item.dataIndex === "status") {
@@ -80,8 +83,8 @@ const shipment = () => {
               placeholder="Please enter "
               style={{ width: "150px" }}
               options={[
-                { value: 0, label: "草稿" },
-                { value: 1, label: "已完成" }
+                { value: 0, label: t("status.draft") },
+                { value: 1, label: t("status.completed") }
               ]}
             />
           );
@@ -90,7 +93,7 @@ const shipment = () => {
       }
     },
     {
-      title: "Action",
+      title: t("booking.action"),
       hideInSearch: true,
       render: (e, record) => (
         <>
@@ -133,7 +136,7 @@ const shipment = () => {
   return (
     <div>
       <div className="header">
-        <div className="title leading-7xl">Booking</div>
+        <div className="title leading-7xl">{t("booking.booking")}</div>
         <Button
           type="primary"
           size="large"
@@ -141,7 +144,7 @@ const shipment = () => {
             navigate("/booking/detail");
           }}
         >
-          NEW BOOKING
+          {t("booking.new booking")}
         </Button>
       </div>
       <ProTable
@@ -172,7 +175,7 @@ const shipment = () => {
 
           optionRender: () => [
             <Button key="search" type="primary" onClick={() => dataForm.current?.submit()}>
-              Search
+              {t("common.search")}
             </Button>,
             <Button
               key="reset"
@@ -183,7 +186,7 @@ const shipment = () => {
                 dataForm.current?.submit();
               }}
             >
-              Clear Filters
+              {t("common.clear")}
             </Button>
           ]
         }}
@@ -191,7 +194,7 @@ const shipment = () => {
         pagination={{
           pageSize: 10,
           showQuickJumper: true,
-          showTotal: (total) => `Total ${total} data`
+          showTotal: (total) => `${t("common.total")} ${total} ${t("common.entries")}`
         }}
         rowKey="id"
         toolBarRender={false}

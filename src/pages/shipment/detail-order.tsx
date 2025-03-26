@@ -16,7 +16,7 @@ function DetailOrder() {
     // 2:"到达起运港"     1
     // 3:"船开ETD"       1
     // 4:"船开ATD"       1
-    // 5:"船舶到港ETA"    1.5
+    // 5:"船舶到港ETA"    1
     // 6:"船舶到港ATA"    2
     // 7:"尾端派送"       2.5
     // 8:"已送达"         3
@@ -50,7 +50,7 @@ function DetailOrder() {
       if (status === 5) {
         return {
           isMain: true,
-          percent: 1.5
+          percent: 1
         };
       }
       return { isMain: false };
@@ -101,7 +101,7 @@ function DetailOrder() {
   return (
     <div>
       <div>
-        <h2 className="text-[#69686D] font-normal">{time?.time_type}</h2>
+        <h2 className="text-[#69686D] font-normal">{time?.time_type?.toUpperCase()}</h2>
         <p className="font-bold text-2xl mb-0.5">{formatDateTime(time?.time_value)}</p>
         <span>{formatDateTime(time?.created_at)}</span>
       </div>
@@ -121,7 +121,7 @@ function useSliderDescription(data, optionName) {
     description: (
       <div>
         <h3 className="mb-1 mt-0 font-medium text-base">{data?.name}</h3>
-        <p className="text-[#A3A3A3]">{data?.address}</p>
+        <p className="text-[#A3A3A3]">{data?.address || formatDateTime(data?.cutoff)}</p>
       </div>
     ),
     content: <ShippingInfo data={data} optionName={optionName} />

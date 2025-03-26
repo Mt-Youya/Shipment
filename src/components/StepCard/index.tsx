@@ -3,18 +3,10 @@ import { useTranslation } from "react-i18next";
 import { FileTextOutlined } from "@ant-design/icons";
 import { getShipments } from "../../service/shipments";
 import { LangStore } from "../../store/lang.ts";
+import { overTextPopper } from "../../utils/getElementAttributes.ts";
 import styles from "./styles.module.less";
 
 import type { AwaitedReturn } from "../../utils/common.type.ts";
-
-function overTextPopper(text: string) {
-  const p = document.createElement("p");
-  p.innerText = text;
-  document.body.appendChild(p);
-  const width = +getComputedStyle(p).width.split("px")[0];
-  p.parentNode?.removeChild(p);
-  return width;
-}
 
 interface IStepCardProps {
   stepsCurrent?: number;
@@ -27,6 +19,11 @@ function StepCard({ onClick, data }: IStepCardProps) {
 
   const { t } = useTranslation();
   const { lang } = LangStore();
+
+  function getElementWidth(element: string) {
+    const style = overTextPopper(element);
+    return style.width?.split("px")[0] || 0;
+  }
 
   const stepItems = [
     {
@@ -110,7 +107,7 @@ function StepCard({ onClick, data }: IStepCardProps) {
       ),
       description:
         data?.delivery_arrive &&
-        (overTextPopper(data?.delivery_arrive) > 140 ? (
+        (getElementWidth(data?.delivery_arrive) > 140 ? (
           <Tooltip
             title={
               <>
@@ -163,9 +160,9 @@ function StepCard({ onClick, data }: IStepCardProps) {
           <li>
             <img src="/images/icons/Container.svg" alt="Container" />
             &nbsp;{data?.task_count} {t("shipment.task")}
-            {lang === "en" && data?.task_count > 1 ? "s" : ""} | {data?.container}{" "}
+            {lang === "en" && (data?.task_count > 1 ? "s" : "")} | {data?.container}{" "}
             {t("shipment.container")}
-            {lang === "en" && data?.container > 1 ? "s" : ""}
+            {lang === "en" && (data?.container > 1 ? "s" : "")}
           </li>
         </ul>
       </div>

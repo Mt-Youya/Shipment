@@ -1,6 +1,7 @@
 import React from "react";
 import { Table } from "antd";
 import type { TableProps } from "antd";
+import { useTranslation } from "react-i18next";
 
 interface DataType {
   id: string;
@@ -14,29 +15,6 @@ interface DataType {
   bankAddress: string;
   bankInterNumber: string;
 }
-
-const columns: TableProps<DataType>["columns"] = [
-  {
-    title: "Company Number",
-    dataIndex: "company_no"
-  },
-  {
-    title: "Short Name",
-    dataIndex: "short_name"
-  },
-  {
-    title: "Corporate name",
-    dataIndex: "company_name"
-  },
-  {
-    title: "Company Category",
-    dataIndex: "company_category"
-  },
-  {
-    title: "Address",
-    dataIndex: "address"
-  }
-];
 
 // const data: DataType[] = [
 //   {
@@ -103,6 +81,35 @@ const columns: TableProps<DataType>["columns"] = [
 
 const RelatedCompanies: React.FC<{ data: any }> = (props) => {
   const { data } = props;
+
+  const { t } = useTranslation();
+
+  const columns: TableProps<DataType>["columns"] = [
+    {
+      title: t("business.company Number"),
+      dataIndex: "company_no"
+    },
+    {
+      title: t("business.short Name"),
+      dataIndex: "short_name"
+    },
+    {
+      title: t("business.corporate name"),
+      dataIndex: "company_name"
+    },
+    {
+      title: t("business.company Category"),
+      dataIndex: "company_category",
+      render: (category: any) => {
+        return category.value
+      }
+    },
+    {
+      title: t("business.address"),
+      dataIndex: "address"
+    }
+  ];
+
   return <Table<DataType> columns={columns} dataSource={data} bordered pagination={false} />;
 };
 

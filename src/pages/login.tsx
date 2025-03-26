@@ -11,9 +11,11 @@ import { useEffect, useState } from "react";
 // import useRouteStore from "../store/route";
 import useCurrentUserStore from "../store/current-user";
 import { Local, Session } from "../utils/storage.ts";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const { token } = theme.useToken();
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -75,7 +77,7 @@ const Login = () => {
           form={form}
         >
           <div className="text-center text-5xl text-black-dark opacity-90 font-bold mb-4 leading-5xl">
-            Sign In
+            {t("user.signIn")}
           </div>
           <ProFormText
             name="username"
@@ -91,11 +93,11 @@ const Login = () => {
                 />
               )
             }}
-            placeholder="账户"
+            placeholder={t('user.account')}
             rules={[
               {
                 required: true,
-                message: "请输入用户名!"
+                message: t('common.please typing') + t('user.account') //"请输入用户名!"
               }
             ]}
           />
@@ -113,11 +115,11 @@ const Login = () => {
                 />
               )
             }}
-            placeholder="密码"
+            placeholder={t('user.password')}
             rules={[
               {
                 required: true,
-                message: "请输入密码！"
+                message: t('common.please typing') + t('user.password') //"请输入密码!"
               }
             ]}
           />
@@ -128,7 +130,7 @@ const Login = () => {
             }}
           >
             <ProFormCheckbox noStyle name="autoLogin">
-              automatic login
+              {t("user.autoLogin")}
             </ProFormCheckbox>
           </div>
         </LoginForm>

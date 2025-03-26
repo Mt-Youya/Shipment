@@ -63,7 +63,8 @@ const useRouteStore = create<RouteState>()(
           return currentRoute.path;
         }
         return "";
-      }
+      },
+      reset: () => set({ activePath: "" })
     }),
     { name: "route" }
   )

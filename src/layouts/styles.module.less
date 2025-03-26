@@ -1,0 +1,29 @@
+.menu {
+  :global {
+    .ant-menu-item, .ant-menu-submenu-title {
+      @media (width <= 1440px) {
+        padding: 0 10px;
+        margin: 10px;
+        padding-left: 10px !important;
+      }
+      padding: 0 20px;
+      margin: 10px 0;
+    }
+  }
+}
+
+.logo {
+  @media (width <= 1440px) {
+    margin-left: 10px;
+  }
+  margin-left: 20px;
+}
+
+.sider {
+  flex: 0 0 230px !important;
+  max-width: initial !important;
+  min-width: initial !important;
+  @media (width <= 1440px) {
+    flex: 0 0 200px !important;
+  }
+}

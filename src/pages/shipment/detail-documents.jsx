@@ -1,17 +1,16 @@
-import { Button, DatePicker, Form, Input, message, Select, Table, Upload } from "antd";
-import { useEffect, useMemo, useState } from "react";
-import { getShipmentDetailFile } from "@/service/shipments/index.js";
+import { Button, DatePicker, Form, Input, Select, Table } from "antd";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getDropdown } from "@/service/common.js";
+import { UploadOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
+import { getShipmentDetailFile, getUploadUsers } from "@/service/shipments/index.js";
 import { useOssUploadFile } from "@/hooks/useOssUploadFile.js";
 import { useInputFileUpload } from "@/hooks/useInputFileUpload.js";
 import { useDownload } from "@/hooks/useDownload.js";
+import { ShipmentsStore } from "@/store/shipments.js";
 import dayjs from "dayjs";
 import DetailOrder from "./detail-order";
-import { ShipmentsStore } from "@/store/shipments.js";
-import { ProTable } from "@ant-design/pro-components";
 import formatDateTime from "@/utils/formatDateTime.js";
-import { useTranslation } from "react-i18next";
 
 function DetailDocuments() {
   const [form] = Form.useForm();
@@ -53,16 +52,17 @@ function DetailDocuments() {
     setFiles(files);
   }
 
-  const options = useMemo(() => {
-    const list = [];
-    for (const uploadUserKey in dropdownOptions?.upload_user) {
-      list.push({
-        label: dropdownOptions?.upload_user[uploadUserKey]?.upload_user_name,
-        value: uploadUserKey
-      });
-    }
-    return list;
-  }, [dropdownOptions]);
+  const [options, setOptions] = useState([]);
+  useEffect(() => {
+    getUploadUsers({ order_id: id }).then((list) => {
+      setOptions(
+        list.map((item) => ({
+          label: item.upload_user_name,
+          value: item.upload_user_id
+        }))
+      );
+    });
+  }, []);
 
   const input = useInputFileUpload(
     onChange,
@@ -120,8 +120,13 @@ function DetailDocuments() {
         <Form.Item name="user_id" label={t("shipment.uploader")}>
           <Select options={options} placeholder="Please select" />
         </Form.Item>
-        <Button type="primary" className="cursor-pointer" onClick={() => input.click()}>
-          {t("shipment.upload file")}
+        <Button
+          type="primary"
+          icon={<UploadOutlined />}
+          className="cursor-pointer"
+          onClick={() => input.click()}
+        >
+          {t("shipment.upload files")}
         </Button>
       </Form>
 

@@ -28,7 +28,7 @@ const WeeklyCalendar: React.FC<{
 
   // 处理周切换
   const handleWeekChange = (weeks: number) => {
-    setCurrentDate((prev: any) => addWeeks(prev, weeks));
+    setCurrentDate((prev: Date) => addWeeks(prev, weeks));
   };
   const handlePickupClick = (e: boolean | ((prevState: boolean) => boolean)) => {
     setIsPickupSelected(e);
@@ -120,7 +120,6 @@ const WeeklyCalendar: React.FC<{
                 </div>
               </div>
             </div>
-            <img src="/images/Group 90.png" alt="" height={32} />
           </div>
 
           <div>
@@ -148,7 +147,7 @@ const WeeklyCalendar: React.FC<{
         </div>
       </div>
       <div className={styles.RT_content}>
-        <div style={{ display: "flex", flexWrap: "wrap", height: "100%" }}>
+        <div style={{ display: "flex", height: "100%" }}>
           {getWeekDays(currentDate).map((date, index) => {
             //判断date是否是今天
             const isToday = format(date, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd");
@@ -157,29 +156,43 @@ const WeeklyCalendar: React.FC<{
                 key={index}
                 style={{
                   textAlign: "center",
-                  // padding: "10px",
+                  background: activeColumnIndex === index ? "rgba(86, 106, 229, 0.05)" : "",
+                  paddingTop: "10px",
                   borderRight: index === 6 ? "" : "1px solid #ddd",
                   borderLeft: index === 0 ? "1px solid #ddd" : "",
                   height: "100%",
                   width: activeColumnIndex === index ? "20%" : "14%", // 动态设置宽度
-                  transition: "width 0.3s ease", // 添加动画效果
-                  marginTop: "10px",
-                  position: "relative"
+                  transition: "width 0.3s ease",
+                  position: "relative",
+                  flex: "0 0 auto"
                 }}
               >
-                <div style={{ fontSize: "11px", color: isToday ? "#566AE5" : "#69686D" }}>
-                  {format(date, "EEE", { locale: enUS })}
-                </div>
                 <div
-                  style={{
-                    fontSize: "24px",
-                    fontWeight: 500,
-                    color: isToday ? "#566AE5" : "#171629"
+                  onClick={() => {
+                    // if (isPickupSelected === false) {
+                    if (activeColumnIndex === index) {
+                      setActiveColumnIndex(-1);
+                    } else {
+                      setActiveColumnIndex(index);
+                    }
+                    // }
                   }}
                 >
-                  {format(date, "d", { locale: enUS })}
+                  <div style={{ fontSize: "11px", color: isToday ? "#566AE5" : "#69686D" }}>
+                    {format(date, "EEE", { locale: enUS })}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "24px",
+                      fontWeight: 500,
+                      color: isToday ? "#566AE5" : "#171629"
+                    }}
+                  >
+                    {format(date, "d", { locale: enUS })}
+                  </div>
                 </div>
                 {isPickupSelected ? (
+                  // 提货
                   data?.goods_pickup?.[index] ? (
                     <div>
                       <div>
@@ -211,7 +224,7 @@ const WeeklyCalendar: React.FC<{
                                     transform: "translateX(-50%)"
                                   }}
                                   type="primary"
-                                  onClick={() => navigate("/billing")}
+                                  onClick={() => navigate("/shipment")}
                                 >
                                   {t("home.viewAll")}
                                 </Button>
@@ -227,6 +240,7 @@ const WeeklyCalendar: React.FC<{
                     <span style={{ color: "#A3A3A3" }}>None</span>
                   )
                 ) : data?.delivery?.[index].length > 0 ? (
+                  // 派送
                   <div>
                     {data.delivery[index].map((e) => (
                       <Popover content={content(e.sub_order)} key={e} placement="bottom">
@@ -239,24 +253,17 @@ const WeeklyCalendar: React.FC<{
                             marginTop: "5px",
                             fontSize: "12px",
                             width: "100%",
-                            background: "#E7E7E7",
+                            background: "#F6F8FA",
                             padding: "10px 2px",
                             wordBreak: "break-all",
                             border: "1px solid #ddd",
                             borderRadius: "4px"
                           }}
                         >
-                          <span style={{ color: "#566AE5" }}>
-                            {e?.client_name}
-                            {e?.client_name ? "," : ""}
-                          </span>
+                          <p style={{ color: "#566AE5", marginBottom: "5px" }}>{e?.client_name}</p>
                           <span
                             onClick={() => {
-                              if (activeColumnIndex === index) {
-                                setActiveColumnIndex(-1);
-                              } else {
-                                setActiveColumnIndex(index);
-                              }
+                              navigate("/shipment/detail/" + e?.order_id);
                             }}
                             style={{ textDecoration: "underline", cursor: "pointer" }}
                           >
@@ -268,7 +275,7 @@ const WeeklyCalendar: React.FC<{
                               ? e?.port_name.slice(0, activeColumnIndex === index ? 25 : 13) + "..."
                               : e?.port_name}
                           </span>
-                          <p style={{ color: "#A3A3A3" }}>{e?.container}</p>
+                          <p style={{ color: "#A3A3A3", marginTop: "5px" }}>{e?.container}</p>
                         </div>
                       </Popover>
                     ))}
@@ -283,7 +290,7 @@ const WeeklyCalendar: React.FC<{
                         transform: "translateX(-50%)"
                       }}
                       type="primary"
-                      onClick={() => navigate("/billing")}
+                      onClick={() => navigate("/shipment")}
                     >
                       {t("home.viewAll")}
                     </Button>

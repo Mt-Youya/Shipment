@@ -1,3 +1,10 @@
+.ant-divider{
+    --width:0.045;
+}
+
 .ant-divider.ant-divider-horizontal.ant-divider-with-text.ant-divider-with-text-end[role="separator"]::after {
-    width: calc(0.15 * 100%);
+    width: calc(var(--width) * 100%);
+}
+.ant-divider.ant-divider-horizontal.ant-divider-with-text.ant-divider-with-text-end[role="separator"]::before {
+    width: calc(100% - var(--width) * 100%)
 }

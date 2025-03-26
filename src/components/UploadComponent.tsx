@@ -5,11 +5,12 @@ import { uploadAPI, uploadTokenAPI, uploadLogAPI } from "../service/shipmentAPI"
 import OSS from "ali-oss";
 import dayjs from "dayjs";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 interface UploadBookingFormatProps {
   open: boolean;
   onClose: () => void;
-  upload_type: Number;
+  upload_type: number;
   order_id: string;
   updateData: () => void;
 }
@@ -30,6 +31,7 @@ const UploadBookingFormat: React.FC<UploadBookingFormatProps> = ({
       getHistory();
       setFileList([]);
       form.resetFields();
+      updateData && updateData();
     }
   }, [open]);
   const getHistory = async () => {
@@ -41,14 +43,15 @@ const UploadBookingFormat: React.FC<UploadBookingFormatProps> = ({
       setHistoryList(res.list);
     } catch (error) {}
   };
+  const { t } = useTranslation();
   const columns = [
     {
-      tilte: "File Name",
+      title: t("common.file Name"),
       dataIndex: "file_name",
       key: "file_name"
     },
     {
-      title: "Date",
+      title: t("common.date"),
       dataIndex: "upload_time",
       key: "upload_time",
       render: (text: string | number | Date | dayjs.Dayjs | null | undefined) => {
@@ -56,7 +59,7 @@ const UploadBookingFormat: React.FC<UploadBookingFormatProps> = ({
       }
     },
     {
-      title: "操作",
+      title: t("common.action"),
       key: "action",
       render: (record) => {
         return <a onClick={() => downloadHandle(record.path, record.file_name)}>下载</a>;
@@ -84,19 +87,15 @@ const UploadBookingFormat: React.FC<UploadBookingFormatProps> = ({
   };
   // 表单提交
   const handleSubmit = async (e) => {
-    try {
-      if (fileList.length === 0) return message.error("请上传文件");
-      const res = await uploadAPI({
-        upload_type,
-        order_id,
-        file: fileList
-      });
-      message.success(res.msg);
-      onClose();
-      updateData();
-    } catch (error) {
-      message.error("error");
-    }
+    if (fileList.length === 0) return message.error("请上传文件");
+    const res = await uploadAPI({
+      upload_type,
+      order_id,
+      file: fileList
+    });
+    message.success(res.msg);
+    updateData && updateData();
+    onClose();
   };
 
   // 规范化文件列表
@@ -178,7 +177,7 @@ const UploadBookingFormat: React.FC<UploadBookingFormatProps> = ({
       width={600}
       footer={[
         <Button key="submit" type="primary" onClick={() => form.submit()}>
-          Submit
+          {t("common.submit")}
         </Button>
       ]}
     >
@@ -188,7 +187,7 @@ const UploadBookingFormat: React.FC<UploadBookingFormatProps> = ({
           label="Booking Format"
           valuePropName="fileList"
           getValueFromEvent={normFile}
-          extra="Supported extensions: .pdf"
+          extra={t("common.supported extensions") + ": .pdf"}
         >
           <Upload accept=".pdf" {...uploadProps}>
             <Button icon={<UploadOutlined />}>Upload PDF</Button>
@@ -198,7 +197,7 @@ const UploadBookingFormat: React.FC<UploadBookingFormatProps> = ({
 
       {historyList.length > 0 && (
         <div>
-          <h3>History</h3>
+          <h3>{t("common.history")}</h3>
           <Table rowKey={"id"} columns={columns} dataSource={historyList} pagination={false} />
         </div>
       )}

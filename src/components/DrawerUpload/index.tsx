@@ -1,10 +1,13 @@
-import { Button, Drawer, DrawerProps, Form, message, Table, UploadProps } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Drawer, DrawerProps, Form, message, Table, Tooltip, UploadProps } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { uploadLog } from "../../service/common.ts";
-import React, { useEffect, useState } from "react";
 import { useOssUploadFile } from "../../hooks/useOssUploadFile.ts";
 import { useInputFileUpload } from "../../hooks/useInputFileUpload.ts";
 import { useDownload } from "../../hooks/useDownload.ts";
+import { useTranslation } from "react-i18next";
+import formatDateTime from "../../utils/formatDateTime.ts";
+import { overTextPopper } from "@/utils/getElementAttributes.ts";
 
 interface IProps {
   drawerProps: DrawerProps;
@@ -34,6 +37,7 @@ function DrawerUpload({
 }: IProps) {
   const { id, type } = uploadOptions;
   const [form] = Form.useForm();
+  const { t } = useTranslation();
 
   const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -53,24 +57,43 @@ function DrawerUpload({
 
   const historyColumns = [
     {
-      title: "File Name",
+      title: t("common.file Name"),
       dataIndex: "file_name",
       key: "file_name"
     },
     {
-      title: "Date",
+      title: t("common.date"),
       dataIndex: "upload_time",
-      key: "upload_time"
+      key: "upload_time",
+      render: (time) => formatDateTime(time)
     },
     {
-      title: "Audit opinion",
+      title: t("common.audit opinion"),
       dataIndex: "review_comment",
-      key: "review_comment"
+      key: "review_comment",
+      ellipsis: true,
+      width: 120,
+      render: (text) => {
+        const styles = overTextPopper(text, { width: "120px" });
+        const height = +styles.height.split("px")[0];
+        if (height > 40) {
+          return (
+            <Tooltip title={text}>
+              <div className="w-[100px] overflow-hidden text-ellipsis whitespace-nowrap">
+                {text}
+              </div>
+            </Tooltip>
+          );
+        }
+        return text;
+      }
     },
     {
-      title: "Action",
+      title: t("common.action"),
       dataIndex: "path",
       key: "action",
+      width: 80,
+      ellipsis: true,
       render: (url, record) => (
         <img
           src="/images/icons/Download.svg"
@@ -85,21 +108,21 @@ function DrawerUpload({
 
   function handleChange(files) {
     setFileList(files);
+    form.setFieldValue("file", files);
   }
 
   function handleFinish(res) {
-    message.success("Upload success");
-    setLoading(false);
-    setOpen(false);
-    onFinish?.(res);
+    message.success(t("status.upload success")).then(() => onFinish?.(res));
+    handleClose();
   }
 
   function handleClose() {
+    setLoading(false);
     setOpen(false);
     setFileList([]);
   }
 
-  const { setFiles } = useOssUploadFile(type, id, handleFinish);
+  const { setFiles } = useOssUploadFile(type, id, handleFinish, () => setLoading(false));
 
   const input = useInputFileUpload(handleChange, uploadProps, { max: maxSize });
 
@@ -112,16 +135,23 @@ function DrawerUpload({
         <Button
           key="submit"
           onClick={() => {
-            setLoading(true);
-            setFiles(fileList);
+            form
+              .validateFields()
+              .then(() => {
+                setLoading(true);
+                setFiles(fileList);
+              })
+              .catch((e) => {
+                console.log(e);
+              });
           }}
           loading={loading}
           className="bg-primary text-white hover:text-[#566AE5] mr-1"
         >
-          Submit
+          {t("common.submit")}
         </Button>,
         <Button key="cancel" onClick={handleClose}>
-          Cancel
+          {t("common.cancel")}
         </Button>
       ]}
       open={open}
@@ -130,10 +160,14 @@ function DrawerUpload({
     >
       <Form form={form}>
         <h2 className="mt-0">{uploadOptions.title}</h2>
-        <Form.Item name="file" label={null}>
+        <Form.Item
+          name="file"
+          label={null}
+          rules={[{ required: true, message: t("common.please") + t("common.upload file") }]}
+        >
           <div>
             <Button icon={<UploadOutlined />} onClick={() => input?.click()}>
-              Upload files
+              {t("common.upload files")}
             </Button>
             {acceptText}
           </div>
@@ -150,7 +184,7 @@ function DrawerUpload({
       </Form>
       {showHistory && (
         <>
-          <h2>History</h2>
+          <h2>{t("common.history")}</h2>
           <Table
             bordered
             rowKey="id"

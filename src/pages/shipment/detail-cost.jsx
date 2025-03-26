@@ -34,23 +34,23 @@ function DetailCost({ dataSource }) {
     { key: "pre_carriage", dataIndex: "pre_carriage", title: t("shipment.PRE-CARRIAGE") }
   ];
 
-  const quoteData = useMemo(() => [{ ...dataSource?.quote_info, id: randomUUID() }], [dataSource]);
+  const quoteData = useMemo(() => [{ id: randomUUID(), ...dataSource?.quote_info }], [dataSource]);
   const rateData = useMemo(
     () => dataSource?.rate_information ?? [],
     [dataSource?.rate_information]
   );
   const route = useMemo(() => dataSource?.route, [dataSource?.route]);
   const transitData = useMemo(
-    () => dataSource?.transit_information ?? [],
+    () => dataSource?.transit_information?.map((item) => ({ id: randomUUID(), ...item })) ?? [],
     [dataSource?.transit_information]
   );
 
   const rateColumns = [
     { title: t("billing.cost Description"), dataIndex: "cost_item_en" },
-    { title: t("billing.cost Unit Name"), dataIndex: "unit_name" },
+    { title: t("billing.cost Unit Name"), dataIndex: "currency" },
     { title: t("billing.unit Price"), dataIndex: "quote_unit_price" },
     { title: t("billing.quality"), dataIndex: "quantity" },
-    { title: t("billing.unit"), dataIndex: "currency" },
+    { title: t("billing.unit"), dataIndex: "unit_name" },
     { title: t("billing.price"), dataIndex: "total_amount" }
   ];
 
@@ -82,23 +82,23 @@ function DetailCost({ dataSource }) {
           />
         </div>
         <Divider type="vertical" className="h-[80vh]" />
-        <div className="flex-3">
-          <h3>Route</h3>
+        <div className="flex-3 mt-1">
+          <h3>{t("shipment.route")}</h3>
           <ul className="mb-0 p-0 list-none *:text-[#69686D]">
             <li>
-              Origin: &nbsp;<b>{route?.origin}</b>
+              {t("shipment.origin")}: &nbsp;<b>{route?.origin}</b>
             </li>
             <li>
-              Origin Dwell: &nbsp;<b>{route?.origin_dwell}</b>
+              {t("shipment.origin Dwell")}: &nbsp;<b>{route?.origin_dwell}</b>
             </li>
             <li>
-              Port to Port(Flexport Est.): &nbsp;<b>{route?.flex_port_est}</b>
+              {t("shipment.port to Port(Flexport Est.)")}: &nbsp;<b>{route?.flex_port_est}</b>
             </li>
             <li>
-              Destination Dwell: &nbsp;<b>{route?.destination_dwell}</b>
+              {t("shipment.destination Dwell")}: &nbsp;<b>{route?.destination_dwell}</b>
             </li>
             <li>
-              Destination: &nbsp;<b>{route?.destination}</b>
+              {t("shipment.destination")}: &nbsp;<b>{route?.destination}</b>
             </li>
           </ul>
           <Divider />

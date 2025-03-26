@@ -10,7 +10,7 @@ type TPlaces = IShipmentMap["places"];
 interface IOption {
   label: string;
   value?: string;
-  children?: ActionTime[];
+  children?: ActionTime[] | null;
 }
 interface IProps {
   data: TPlaces["depart"] & TPlaces["pod_port"] & TPlaces["transit_port"] & TPlaces["pol_port"];
@@ -37,8 +37,11 @@ function ShippingInfo({ data, optionName }: IProps) {
   ];
 
   const portCommon: IOption[] = [
-    { label: t("shipment.vessel"), value: vessel },
-    { label: t("shipment.carrier"), value: carrier }
+    {
+      label: t("shipment.carrier"),
+      value: carrier ?? container_info?.[0]?.carrier,
+      children: container_info?.length > 0 ? container_info : null
+    }
   ];
 
   const portOptions = [
@@ -52,6 +55,11 @@ function ShippingInfo({ data, optionName }: IProps) {
       value: data?.arrive?.find(({ is_newest }) => is_newest === 1)?.time_value,
       children: data?.arrive
     },
+    {
+      label: t("shipment.vessel"),
+      value: vessel ?? container_info?.[0]?.vessel,
+      children: container_info?.length > 0 ? container_info : null
+    },
     ...portCommon,
     { label: t("shipment.tracking"), value: tracking }
   ];
@@ -61,6 +69,12 @@ function ShippingInfo({ data, optionName }: IProps) {
       label: t("shipment.departed"),
       value: container_info?.[0]?.depart?.find(({ is_newest }) => is_newest === 1)?.time_value,
       children: container_info?.[0]?.depart
+    },
+    {
+      label: t("shipment.Est. Arrival"),
+      value: data?.container_info?.[0]?.arrive?.find(({ is_newest }) => is_newest === 1)
+        ?.time_value,
+      children: data?.container_info?.[0]?.arrive
     },
     ...portCommon
   ];
@@ -94,7 +108,7 @@ function ShippingInfo({ data, optionName }: IProps) {
 
       {(optionName === "transit_port" || optionName === "pol_port") && (
         <>
-          <BoxNumber number={carrier} />
+          <BoxNumber number={optionName === "transit_port" ? carrier : data?.container_no} />
           <div className="flex gap-0.5">
             <img src="/images/icons/Ship.svg" alt="ship" />
             <p className="text-lg font-semibold text-primary">{data?.transfer_info}</p>
@@ -125,52 +139,58 @@ function BoxNumber({ number }: { number: string[] }) {
 }
 
 function TransferList({ options }: { options: IOption[] }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-3 gap-1 max-w-40">
-      {options?.map(({ label, value, children }, index) => (
-        <div
-          key={index}
-          className="flex flex-col pr-1"
-          style={{ borderRight: index % 3 !== 2 ? "1px solid #f1f1f1" : "none" }}
-        >
-          <span className="text-sm text-[#A3A3A3] mb-0.5">{label}</span>
-          {children && children?.length >= 2 ? (
-            <Popover content={<TransferPopper data={children} />} title="Latest Update">
-              <span className="text-xs font-semibold text-[#171629] underline">
-                {formatDateTime(value)}
-              </span>
-            </Popover>
-          ) : (
-            <span className="text-xs font-semibold text-[#171629]">{formatDateTime(value)}</span>
-          )}
-        </div>
-      ))}
+      {options?.map(({ label, value, children }, index) => {
+        return (
+          <div
+            key={index}
+            className="flex flex-col pr-1"
+            style={{ borderRight: index % 3 !== 2 ? "1px solid #f1f1f1" : "none" }}
+          >
+            <span className="text-sm text-[#A3A3A3] mb-0.5">{label}</span>
+            {children && children?.length > 1 ? (
+              <Popover
+                content={<TransferPopper data={children} />}
+                title={t("shipment.latest Update")}
+              >
+                <span className="text-xs font-semibold text-[#171629] underline cursor-pointer">
+                  {formatDateTime(value)}
+                </span>
+              </Popover>
+            ) : (
+              <span className="text-xs font-semibold text-[#171629]">{formatDateTime(value)}</span>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
 
 function TransferPopper({ data }: { data: ActionTime[] }) {
-  const list = useMemo(() => data.slice(0, data.length - 2), [data]);
+  const { t } = useTranslation();
   return (
     <ul className="list-none mt-0 p-0">
-      {list.map((item, index, array) => (
-        <>
-          <li key={index} className="flex flex-col gap-1">
+      {data.map((item, index, array) => (
+        <Fragment key={index}>
+          <li className="flex flex-col gap-1">
             <div className="flex">
               <div className="flex flex-col">
-                <span className="text-[#A3A3A3]"> Sched. Departure </span>
+                <span className="text-[#A3A3A3]"> {t("shipment.Sched. Departure")} </span>
                 <span className="line-through">{formatDateTime(array[index + 1]?.time_value)}</span>
               </div>
               <ArrowRightOutlined className="mx-2" />
               <div className="flex flex-col">
-                <span className="text-[#A3A3A3]"> Departed</span>
+                <span className="text-[#A3A3A3]"> {t("shipment.departed")}</span>
                 <span className="underline">{formatDateTime(item?.time_value)} </span>
               </div>
             </div>
-            <span>{item.created_at}</span>
+            <span>{formatDateTime(item.created_at)}</span>
           </li>
           {index !== array.length - 1 && <Divider />}
-        </>
+        </Fragment>
       ))}
     </ul>
   );

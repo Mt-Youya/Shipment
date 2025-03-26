@@ -18,6 +18,7 @@ const DashboardLayout: React.FC = () => {
   const [currentDate, setCurrentDate] = React.useState(new Date());
 
   useEffect(() => {
+    setData({}); // 切换日期时清空数据
     getData(currentDate);
   }, [currentDate]);
   const getData = async (e) => {
@@ -86,7 +87,7 @@ const DashboardLayout: React.FC = () => {
                         style={{ cursor: "pointer" }}
                         onClick={() => navigator("/shipment/detail/" + e?.sea_order_id)}
                       >
-                        <div className={styles.RT_itemone}>{e.title}</div>
+                        <div className={styles.RT_itemone}>{e.order_no}</div>
                         {e.po_list &&
                           e.po_list.length > 0 &&
                           e.po_list.map((item) => {

@@ -1,6 +1,7 @@
+import { Fragment } from "react";
 import { Tabs } from "antd";
-import { PrimaryTable } from "../PrimaryTable";
 import { useTranslation } from "react-i18next";
+import { PrimaryTable } from "../PrimaryTable";
 import randomUUID from "../../utils/randomUUID.ts";
 import styles from "./styles.module.less";
 
@@ -8,13 +9,13 @@ function RateInformation({ data, column }) {
   const { total, rate_information: rateData } = data;
   const { t } = useTranslation();
 
-  const rateTabs = rateData?.map(({ cost_type, list, sum }) => ({
+  const rateTabs = rateData?.map(({ cost_type, list, sum }, idx) => ({
     key: cost_type,
     label: t("shipment." + cost_type.toUpperCase()),
     children: (
-      <>
+      <Fragment key={idx}>
         <PrimaryTable
-          dataSource={list.map((item) => ({ ...item, id: item.id ?? randomUUID() }))}
+          dataSource={list.map((item) => ({ id: randomUUID(), ...item }))}
           columns={column}
           sum={sum}
         />
@@ -31,7 +32,7 @@ function RateInformation({ data, column }) {
             </ul>
           ))}
         </div>
-      </>
+      </Fragment>
     )
   }));
 

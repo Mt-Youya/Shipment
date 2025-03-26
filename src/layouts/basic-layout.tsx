@@ -26,7 +26,6 @@ const BasicLayout = () => {
     state.activePath,
     state.getNavigatePath
   ]);
-
   const menuItems = useMemo(() => {
     return allMenus.map((a) => ({
       ...a,

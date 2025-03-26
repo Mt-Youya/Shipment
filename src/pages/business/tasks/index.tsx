@@ -4,16 +4,20 @@ import { useRef, useState } from "react";
 import { taskAPI } from "../../../service/shipmentAPI";
 import dayjs from "dayjs";
 import UploadComponent from "../../../components/UploadComponent";
+import DrawerUpload from "@/components/DrawerUpload";
+import { useTranslation } from "react-i18next";
 
-const Billing = () => {
+const Tasks = () => {
   const dataTable = useRef<ActionType>();
   const dataForm = useRef<FormInstance>();
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(0);
+
+  const { t } = useTranslation();
   const columns: ProColumns[] = [
-    { title: "Job No", dataIndex: "sea_order_no", order: 3 },
+    { title: t("business.job No"), dataIndex: "sea_order_no", order: 3 },
     {
-      title: "Task",
+      title: t("business.task"),
       dataIndex: "task_type",
       hideInSearch: true,
       renderText: (e) => {
@@ -23,11 +27,11 @@ const Billing = () => {
       }
     },
     {
-      title: "status",
+      title: t("business.status"),
       dataIndex: "status",
       renderText: (value) => {
-        if (value === 0) return "待处理";
-        if (value === 1) return "已完成";
+        if (value === 0) return t("status.pending");
+        if (value === 1) return t("status.completed");
       },
       renderFormItem: (item, { defaultRender, ...rest }, form) => {
         if (item.dataIndex === "status") {
@@ -36,8 +40,8 @@ const Billing = () => {
               placeholder="Please enter "
               {...rest}
               options={[
-                { value: 0, label: "待处理" },
-                { value: 1, label: "已完成" }
+                { value: 0, label: t("status.pending") },
+                { value: 1, label: t("status.completed") }
               ]}
             />
           );
@@ -46,17 +50,17 @@ const Billing = () => {
       }
     },
 
+    // {
+    //   title:t ("business.Due",)
+    //   dataIndex: "deadline",
+    //   valueType: "date",
+    //   renderText: (value) => {
+    //     if (!value) return "";
+    //     return dayjs(new Date(value)).format("YYYY-MM-DD HH:mm");
+    //   }
+    // },
     {
-      title: "Due",
-      dataIndex: "deadline",
-      valueType: "date",
-      renderText: (value) => {
-        if (!value) return "";
-        return dayjs(new Date(value)).format("YYYY-MM-DD HH:mm");
-      }
-    },
-    {
-      title: "Action",
+      title: t("common.action"),
       hideInSearch: true,
       render: (_, record) => (
         <a
@@ -81,7 +85,7 @@ const Billing = () => {
   return (
     <div>
       <div className="header">
-        <div className="title leading-7xl">Tasks</div>
+        <div className="title leading-7xl">{t("business.tasks")}</div>
       </div>
 
       <ProTable
@@ -118,7 +122,7 @@ const Billing = () => {
 
           optionRender: () => [
             <Button key="search" type="primary" onClick={() => dataForm.current?.submit()}>
-              Search
+              {t("common.search")}
             </Button>,
             <Button
               key="reset"
@@ -129,7 +133,7 @@ const Billing = () => {
                 dataForm.current?.submit();
               }}
             >
-              Clear Filters
+              {t("common.clear")}
             </Button>
           ]
         }}
@@ -137,19 +141,31 @@ const Billing = () => {
         pagination={{
           pageSize: 10,
           showQuickJumper: true,
-          showTotal: (total) => `Total ${total} data`
+          showTotal: (total) => `${t("common.total")} ${total} ${t("common.entries")}`
         }}
         rowKey="id"
         toolBarRender={false}
       />
-      <UploadComponent
+      {/* <UploadComponent
         upload_type={4}
         updateData={updateData}
         order_id={id.toString()}
         open={open}
         onClose={onClose}
+      /> */}
+      <DrawerUpload
+        showHistory
+        open={open}
+        setOpen={setOpen}
+        onFinish={() => location.reload()}
+        uploadProps={{ accept: ".pdf,.png" }}
+        drawerProps={{ title: t("common.upload files") }}
+        uploadOptions={{ title: t("common.upload files"), type: 4, id: id.toString() }}
+        acceptText={
+          <p className="text-[#00000066]">{t("common.Supported extensions")}: .pdf .png</p>
+        }
       />
     </div>
   );
 };
-export default Billing;
+export default Tasks;
