@@ -8,11 +8,7 @@ function PrivateRoute({ config, children }) {
   useEffect(() => {
     document.title = config?.label;
   }, []);
-
-  if (!token) {
-    return <Navigate to="/login" />;
-  }
-
+  
   return <>{children}</>;
 }
 
