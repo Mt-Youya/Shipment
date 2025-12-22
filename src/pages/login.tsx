@@ -29,7 +29,7 @@ const Login = () => {
   const onFinish = async (formData: Record<string, string>) => {
     setLoading(true);
     try {
-      await login(formData);
+      // await login(formData);
       // const routes = await initRoutes();
       // if (!routes || routes.length === 0) {
       //   message.warning("尚未分配权限，请联系管理员先分配权限！");
@@ -51,8 +51,8 @@ const Login = () => {
   };
   useEffect(() => {
     document.title = `登录`;
-    const token = Session.get("token") ?? Local.get("token");
-    if (!token) return;
+    // const token = Session.get("token") ?? Local.get("token");
+    // if (!token) return;
     navigate("/home", { replace: true });
   }, []);
 
